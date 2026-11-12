@@ -3,7 +3,7 @@
    Se ficar vazio, o app tenta o arquivo local videos/<curso>-<n>.mp4 no mesmo repositório.
    Chave = id do curso + '-' + número da aula (começa em 1). */
 const VIDEOS={
-'k_boas-1':'', 'k_boas-2':'', 'k_boas-3':'',
+'k_boas-1':'https://youtu.be/VULx2RhULAY', 'k_boas-2':'', 'k_boas-3':'',
 'k_fund-1':'', 'k_jogo-1':'', 'k_trn1-1':''
 };
 const TODAY='2026-11-05';
