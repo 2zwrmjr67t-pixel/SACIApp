@@ -41,6 +41,8 @@ No `index.html` (ou em `src/data.js`), procure `const VIDEOS={` e cole o link na
 | k_boas-2 | Boas-vindas ao Colorado · O Beira-Rio |
 | k_boas-3 | Boas-vindas ao Colorado · Os valores do clube |
 | k_fund-1 | Fundamentos em casa · Domínio |
+| k_fund-2 | Fundamentos em casa · Condução |
+| k_fund-3 | Fundamentos em casa · Passe na parede |
 | k_jogo-1 | Jogo do Colorado · Olhar antes |
 | k_trn1-1 | Leitura de jogo (treinador) · O guia de sinais |
 

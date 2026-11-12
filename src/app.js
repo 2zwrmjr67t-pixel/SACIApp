@@ -51,7 +51,7 @@ document.addEventListener('change',e=>{const el=e.target;if(el.dataset.f){V.form
 ACT.demo=()=>{V.demo=!V.demo;render()};
 ACT.role=d=>{V.role=d.v;V.demo=false;V.modal=null;V.form={};render()};
 ACT.actor=(d,el)=>{V.demo=false;if(V.role==='trn')V.cid=el.value;else V.aid=el.value;V.modal=null;V.form={};render()};
-ACT.reset=()=>{S=initState();S.reveal={a1:['CV1']};V.modal=null;V.form={};render();toast('Demo reiniciada')};
+ACT.reset=()=>{S=initState();S.reveal={a1:['CV1']};V.role='atleta';V.aid='a1';V.cid='tr1';V.tab={atleta:'inicio',resp:'inicio',trn:'turma',saci:'painel'};V.page='comp';V.demo=false;V.burst=false;V.modal=null;V.form={};render();toast('Demo reiniciada: cursos, cards e pedidos voltaram ao início')};
 ACT.tab=d=>{V.tab[d.r]=d.v;V.form={};render()};
 ACT.close=()=>{V.modal=null;render()};
 ACT.seen=d=>{const n=S.notifs.find(x=>x.id===d.id);if(n)n.seen=true;render()};
