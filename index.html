@@ -244,8 +244,47 @@ body{background:var(--g1)}
 .chip.on{background:var(--red);border-color:var(--red);color:#fff;transform:scale(1.03)}
 .chip.ctx.on{background:var(--g4);border-color:var(--g4)}
 .cnt{display:inline-block;background:var(--red);color:#fff;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:700;margin-left:6px}
-</style></head><body><div id="app"></div>
-<script>const TODAY='2026-11-05';
+
+/* ===== v3: experiência do atleta em primeiro plano ===== */
+.bar{position:static;background:none;background-image:none;color:var(--ink);padding:0;border:0;flex-direction:column;align-items:stretch}
+.bar .seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.bar .seg button{color:var(--ink);border-color:var(--g2);background:#fff;padding:9px}
+.bar .seg button.on{background:var(--red);color:#fff;border-color:var(--red)}
+.bar select{border:1px solid var(--g2);width:100%}
+.bar .lk{color:var(--g3);text-align:left}
+.demo{position:fixed;left:10px;bottom:10px;z-index:40;width:34px;height:34px;border-radius:50%;background:rgba(40,42,46,.35);color:#fff;display:grid;place-items:center;opacity:.55;transition:opacity .2s}
+.demo:hover{opacity:1}
+.demop{position:fixed;left:10px;bottom:52px;z-index:45;width:290px;max-width:calc(100vw - 20px);background:#fff;border-radius:14px;padding:12px;box-shadow:0 10px 30px rgba(0,0,0,.25);animation:rise .2s both}
+.demop .dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.demop .dh button{font-size:16px;color:var(--g3)}
+.stage{min-height:100vh;align-items:center;padding:20px 8px;background:var(--g1)}
+.phone{height:min(820px,calc(100vh - 40px));max-height:none}
+@media(max-width:520px){.stage{padding:0}.phone{max-width:none;height:100vh;height:100dvh;border:0;border-radius:0;box-shadow:none}}
+.web{padding-top:16px}
+.tro{margin:10px auto 2px;height:64px;filter:drop-shadow(0 3px 3px rgba(0,0,0,.2))}
+.cc.off .tro{filter:none;opacity:.8}
+.cc .yr{font-size:12px;font-weight:800;color:var(--ac);letter-spacing:.04em}
+.flip .cc .tro{transform:scale(1.5);margin:40px auto 26px}
+.vid{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#1d1e21;margin-top:8px}
+.vid iframe,.vid video{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#fff;text-align:center;padding:12px;background:var(--red);background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.08) 0 16px,transparent 16px 32px)}
+.vph small{opacity:.75;font-size:11px}
+.les{display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:10px;margin:6px 0;border:1px solid var(--bd);border-radius:12px;background:var(--card)}
+.les .pl{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--ac);color:#fff;flex:none}
+.les.ok .pl{background:var(--g3)}
+.les small{display:block;color:var(--mut);font-size:12px}
+.lk2{color:var(--ac);font-weight:600;font-size:14px}
+@media(max-width:520px){.demo{left:auto;right:8px;top:6px;bottom:auto;width:30px;height:30px;background:rgba(255,255,255,.18)}.demop{left:auto;right:10px;top:44px;bottom:auto}.ph-top{padding-right:46px}}
+</style></head><body><div id="app"></div><template id="vph"><div class="vph"><svg width="44" height="44" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg><b>Vídeo em breve</b><small>Adicione o link em VIDEOS (data.js) ou o arquivo em videos/</small></div></template>
+<script>/* VÍDEOS DAS AULAS
+   Para cada aula, cole um link do YouTube (ex.: 'https://www.youtube.com/watch?v=XXXX').
+   Se ficar vazio, o app tenta o arquivo local videos/<curso>-<n>.mp4 no mesmo repositório.
+   Chave = id do curso + '-' + número da aula (começa em 1). */
+const VIDEOS={
+'k_boas-1':'', 'k_boas-2':'', 'k_boas-3':'',
+'k_fund-1':'', 'k_jogo-1':'', 'k_trn1-1':''
+};
+const TODAY='2026-11-05';
 const CATS=['Sub-9','Sub-11','Sub-13','Sub-15','Sub-17'];
 const FUNIL=['Sinalizado','Em acompanhamento','Na seleção do polo','Convocado à Seleção','Convidado para avaliação','Encaminhado','Mantido na rede','Arquivado'];
 const SIGNALS=[
@@ -260,13 +299,16 @@ const SIGNALS=[
 {id:'T1',g:'Atitude',t:'Pede a bola no momento difícil'},
 {id:'T2',g:'Atitude',t:'Mantém o esforço no jogo difícil'},
 {id:'T3',g:'Atitude',t:'Convive bem com o grupo'}];
-const PAGES=[{id:'comp',t:'Competições',ico:'trophy'},{id:'fund',t:'Fundamentos',ico:'ball'},{id:'cons',t:'Conquistas',ico:'star'},{id:'marc',t:'Marcos Inter',ico:'flag'},{id:'col',t:'Colorado',ico:'shield'}];
+const PAGES=[{id:'comp',t:'Competições',ico:'trophy'},{id:'sala',t:'Sala de Troféus',ico:'trophy'},{id:'fund',t:'Fundamentos',ico:'ball'},{id:'cons',t:'Conquistas',ico:'star'},{id:'marc',t:'Marcos Inter',ico:'flag'},{id:'col',t:'Colorado',ico:'shield'}];
 const CARDS={
-C1:{p:'comp',t:'Primeira competição',h:'Jogue uma competição'},
-C2:{p:'comp',t:'Festival Colorado',h:'Vá ao Festival Colorado'},
-C3:{p:'comp',t:'Copa de bairro',h:'Jogue uma Copa de bairro'},
-C4:{p:'comp',t:'Torneio de inverno',h:'Jogue o Torneio de inverno'},
-C5:{p:'comp',t:'Final no Beira-Rio',h:'Chegue a uma final no Beira-Rio'},
+C1:{p:'comp',t:'Primeira competição',h:'Jogue uma competição',tr:'taca'},
+C2:{p:'comp',t:'Festival Colorado',h:'Vá ao Festival Colorado',tr:'alta'},
+C3:{p:'comp',t:'Copa de bairro',h:'Jogue uma Copa de bairro',tr:'taca'},
+C4:{p:'comp',t:'Torneio de inverno',h:'Jogue o Torneio de inverno',tr:'alta'},
+C5:{p:'comp',t:'Final no Beira-Rio',h:'Chegue a uma final no Beira-Rio',tr:'globo'},
+H1:{p:'sala',t:'Copa do Brasil',yr:'1992',h:'Assista à aula “Nossa história”',tr:'taca',txt:'O primeiro título nacional de mata-mata do Colorado.'},
+H2:{p:'sala',t:'Libertadores',yr:'2006 e 2010',h:'Assista à aula “Nossa história”',tr:'alta',txt:'Duas vezes campeão da América.'},
+H3:{p:'sala',t:'Mundial de Clubes',yr:'2006',h:'Assista à aula “Nossa história”',tr:'globo',txt:'Campeão do mundo em 2006.'},
 F1:{p:'fund',t:'Domínio: 10 seguidos',h:'Faça 10 domínios seguidos'},
 F2:{p:'fund',t:'Condução com as duas pernas',h:'Conduza a bola com as duas pernas'},
 F3:{p:'fund',t:'Passe com a perna menos forte',h:'Passe com a perna menos forte'},
@@ -320,7 +362,7 @@ coaches:[
 athletes:[
 {id:'a1',name:'Gabriel Souza',cat:'Sub-13',mod:'Campo',pos:'Meia',foot:'Direita',partner:'p1',coach:'tr1',resp:'Ana Souza',avatar:{skin:1,hair:0,hc:0},
 stats:{treinos:24,eventos:5,missoes:31},week:{goal:4,done:3},done:['q1','q2','q4','d3'],
-cards:[{id:'C1',d:'2026-05-14'},{id:'C3',d:'2026-09-03'},{id:'F1',d:'2026-06-20'},{id:'F2',d:'2026-07-18'},{id:'F3',d:'2026-09-12'},{id:'G1',d:'2026-03-04'},{id:'G2',d:'2026-04-30'},{id:'G3',d:'2026-10-08'},{id:'M1',d:'2026-08-02'},{id:'CV1',d:'2026-10-28'}],
+cards:[{id:'C1',d:'2026-05-14'},{id:'C3',d:'2026-09-03'},{id:'F1',d:'2026-06-20'},{id:'F2',d:'2026-07-18'},{id:'F3',d:'2026-09-12'},{id:'G1',d:'2026-03-04'},{id:'G2',d:'2026-04-30'},{id:'H1',d:'2026-03-20'},{id:'H2',d:'2026-03-20'},{id:'H3',d:'2026-03-20'},{id:'G3',d:'2026-10-08'},{id:'M1',d:'2026-08-02'},{id:'CV1',d:'2026-10-28'}],
 altura:[{d:'2026-03-10',cm:151,by:'Rodrigo Menezes'},{d:'2026-09-15',cm:156,by:'Rodrigo Menezes'}],mat:'sem',
 courses:{k_boas:{les:[0,1,2]}},consent:{termo:'v1.1',d:'2026-08-12',sinais:true,pendUpd:false},limit:60,
 trilha:[{t:'Fase 1 · Primeiros passos',n:[{id:'q1',k:'quiz'},{id:'q2',k:'quiz'}]},{t:'Fase 2 · Leitura de jogo',n:[{id:'q4',k:'quiz'},{id:'d3',k:'des',card:'F3',t:'Desafio: passe com a perna menos forte'}]},{t:'Fase 3 · Jogo coletivo',n:[{id:'q5',k:'quiz'},{id:'q7',k:'quiz'},{id:'q8',k:'quiz'}]},{t:'Fase 4 · Temporada',n:[{id:'d4',k:'des',card:'F4',t:'Desafio: controle orientado'},{id:'q6',k:'quiz'}]}]},
@@ -328,7 +370,7 @@ trilha:[{t:'Fase 1 · Primeiros passos',n:[{id:'q1',k:'quiz'},{id:'q2',k:'quiz'}
 stats:{treinos:11,eventos:2,missoes:9},week:{goal:4,done:2},done:['q1','q2','d1'],
 cards:[{id:'C1',d:'2026-08-22'},{id:'F1',d:'2026-09-30'},{id:'G1',d:'2026-05-10'},{id:'G2',d:'2026-10-02'}],
 altura:[{d:'2026-04-02',cm:128,by:'Carla Antunes'},{d:'2026-10-05',cm:129.5,by:'Carla Antunes'}],mat:'tardia',
-courses:{k_boas:{les:[0]}},consent:{termo:'v1.1',d:'2026-08-20',sinais:true,pendUpd:true},limit:60,
+courses:{k_boas:{les:[]}},consent:{termo:'v1.1',d:'2026-08-20',sinais:true,pendUpd:true},limit:60,
 trilha:[{t:'Primeiros passos',n:[{id:'q1',k:'quiz'},{id:'q2',k:'quiz'}]},{t:'Dominando a bola',n:[{id:'d1',k:'des',card:'F1',t:'Desafio: 10 domínios'},{id:'q3',k:'quiz'},{id:'d2',k:'des',card:'F2',t:'Desafio: duas pernas'}]},{t:'Jogo em equipe',n:[{id:'q7',k:'quiz'},{id:'q8',k:'quiz'}]}]},
 {id:'a3',name:'Davi Ribeiro',cat:'Sub-9',mod:'Campo',pos:'Ainda explorando',foot:'A descobrir',partner:'p3',coach:'tr3',resp:'Juliana Ribeiro',avatar:{skin:2,hair:2,hc:2},
 stats:{treinos:3,eventos:0,missoes:0},week:{goal:3,done:0},done:[],
@@ -361,13 +403,20 @@ const dd=d=>d.split('-')[2],mm=d=>['jan','fev','mar','abr','mai','jun','jul','ag
 const brl=v=>v?'R$ '+v.toFixed(2).replace('.',','):'Gratuito';
 const isPlay=a=>a.cat==='Sub-9'||a.cat==='Sub-11';
 const uid=()=>'x'+Math.random().toString(36).slice(2,8);
-const IC={home:'<path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/>',album:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/>',trail:'<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h6a4 4 0 000-8h-4a4 4 0 010-8h6"/>',book:'<path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2zM4 19a2 2 0 002 2h13"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',trophy:'<path d="M7 4h10v5a5 5 0 01-10 0zM7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3M12 14v4M8 21h8"/>',ball:'<circle cx="12" cy="12" r="9"/><path d="M12 8l3 2-1 4h-4l-1-4zM12 3v5M21 10l-6 0M4 9l5 1M8 20l2-6M16 20l-2-6"/>',star:'<path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.2 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',flag:'<path d="M5 21V4M5 4h12l-2 4 2 4H5"/>',check:'<path d="M5 12l5 5 9-10"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',bell:'<path d="M6 17V11a6 6 0 0112 0v6l2 2H4zM10 21h4"/>'};
+const IC={home:'<path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/>',album:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/>',trail:'<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h6a4 4 0 000-8h-4a4 4 0 010-8h6"/>',book:'<path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2zM4 19a2 2 0 002 2h13"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',trophy:'<path d="M7 4h10v5a5 5 0 01-10 0zM7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3M12 14v4M8 21h8"/>',ball:'<circle cx="12" cy="12" r="9"/><path d="M12 8l3 2-1 4h-4l-1-4zM12 3v5M21 10l-6 0M4 9l5 1M8 20l2-6M16 20l-2-6"/>',star:'<path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.2 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',flag:'<path d="M5 21V4M5 4h12l-2 4 2 4H5"/>',check:'<path d="M5 12l5 5 9-10"/>',eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',play:'<path d="M8 5v14l11-7z"/>',bell:'<path d="M6 17V11a6 6 0 0112 0v6l2 2H4zM10 21h4"/>'};
 const ic=(n,s)=>`<svg width="${s||20}" height="${s||20}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[n]||''}</svg>`;
 function avatar(a,s){const v=a.avatar,sk=SKINS[v.skin],hc=HAIRC[v.hc],hs=HAIRS[v.hair];
  const hair=hs==='cacheado'?`<circle cx="30" cy="22" r="5" fill="${hc}"/><circle cx="50" cy="22" r="5" fill="${hc}"/><circle cx="40" cy="17" r="6" fill="${hc}"/><circle cx="24" cy="29" r="4" fill="${hc}"/><circle cx="56" cy="29" r="4" fill="${hc}"/>`:hs==='curto'?`<path d="M24 30c0-12 7-17 16-17s16 5 16 17c-4-5-9-7-16-7s-12 2-16 7z" fill="${hc}"/>`:`<path d="M26 27c2-9 8-12 14-12s12 3 14 12c-5-3-9-4-14-4s-9 1-14 4z" fill="${hc}" opacity=".6"/>`;
  return `<svg class="av" width="${s}" height="${s}" viewBox="0 0 80 80"><circle cx="40" cy="40" r="40" fill="#f3d9d9"/><path d="M14 80c0-14 11-22 26-22s26 8 26 22z" fill="#C4161C"/><path d="M33 58l7 7 7-7" stroke="#fff" stroke-width="3" fill="none"/><text x="40" y="77" font-size="9" font-weight="800" fill="#fff" text-anchor="middle" font-family="system-ui">${a.id==="a1"?10:a.id==="a2"?7:9}</text><rect x="34" y="46" width="12" height="12" rx="4" fill="${sk}"/><circle cx="40" cy="34" r="15" fill="${sk}"/>${hair}<circle cx="35" cy="35" r="1.8" fill="#222"/><circle cx="45" cy="35" r="1.8" fill="#222"/><path d="M35 42q5 4 10 0" stroke="#222" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`}
 function stadium(){return `<svg viewBox="0 0 260 90" fill="none" stroke="#fff" stroke-width="3"><path d="M5 88 Q130 -10 255 88"/><path d="M25 88 Q130 10 235 88"/>${[30,55,80,105,130,155,180,205,230].map(x=>`<path d="M${x} 88 L${x} ${88-Math.round(70*Math.sin(Math.PI*(x-5)/250))}"/>`).join('')}<path d="M0 88 H260"/></svg>`}
 function confetti(n,cls){const c=['#C4161C','#ffffff','#8a8d93','#8E0F14','#e2e2e5'];return `<div class="${cls}">${Array.from({length:n},(_,i)=>`<i style="left:${(i*37)%100}%;background:${c[i%5]};animation-delay:${(i%7)*.08}s;transform:rotate(${i*29}deg)"></i>`).join('')}</div>`}
+function trophy(k,sz,own){const id='g'+k+(own?1:0);const f=own?`url(#${id})`:'#c9cace',st=own?'#7d8088':'#a9abb0';
+ const grad=own?`<defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="#9ea1a8"/><stop offset=".35" stop-color="#ffffff"/><stop offset=".6" stop-color="#cfd1d6"/><stop offset="1" stop-color="#8d9097"/></linearGradient></defs>`:'';
+ const rib=own?'#C4161C':'#b7b9be';let b='';
+ if(k==='taca')b=`<path d="M22 14h36v6c0 14-8 24-18 26-10-2-18-12-18-26z" fill="${f}" stroke="${st}"/><path d="M22 18c-10 0-12 14 2 18M58 18c10 0 12 14-2 18" fill="none" stroke="${st}" stroke-width="3"/><rect x="36" y="46" width="8" height="10" fill="${f}" stroke="${st}"/><path d="M28 56h24l3 8H25z" fill="${f}" stroke="${st}"/><rect x="22" y="64" width="36" height="12" rx="1" fill="${rib}"/><rect x="26" y="68" width="28" height="3" fill="#fff" opacity=".5"/>`;
+ else if(k==='alta')b=`<path d="M30 4h20l-2 30c0 6-3 10-8 11-5-1-8-5-8-11z" fill="${f}" stroke="${st}"/><path d="M30 10c-6 0-7 10 0 13M50 10c6 0 7 10 0 13" fill="none" stroke="${st}" stroke-width="2.5"/><rect x="37" y="45" width="6" height="8" fill="${f}" stroke="${st}"/><path d="M31 53h18l2 5H29z" fill="${f}" stroke="${st}"/><path d="M26 58h28v18H26z" fill="${rib}"/><path d="M29 62h22M29 66h22M29 70h22" stroke="#fff" opacity=".45"/>`;
+ else b=`<circle cx="40" cy="20" r="15" fill="${f}" stroke="${st}"/><path d="M27 15h26M25 22h30M29 29h22M40 5c-6 6-6 24 0 30M40 5c6 6 6 24 0 30" fill="none" stroke="${st}" stroke-width="1.2"/><path d="M33 34c2 8 2 14-2 20h18c-4-6-4-12-2-20" fill="${f}" stroke="${st}"/><path d="M28 54h24l3 6H25z" fill="${f}" stroke="${st}"/><rect x="24" y="60" width="32" height="16" rx="1" fill="${rib}"/><rect x="28" y="65" width="24" height="3" fill="#fff" opacity=".5"/>`;
+ return `<svg width="${sz}" height="${sz}" viewBox="0 0 80 80">${grad}${b}</svg>`}
 function cardNo(cid){return String(Object.keys(CARDS).indexOf(cid)+1).padStart(2,'0')}
 /* ---------- regras ---------- */
 function award(aid,cid){const a=A(aid);if(a.cards.some(c=>c.id===cid))return false;a.cards.push({id:cid,d:TODAY});(S.reveal[aid]=S.reveal[aid]||[]).push(cid);S.notifs.push({id:uid(),aid,aud:'atleta',text:'Novo card no seu álbum: '+CARDS[cid].t+'.',seen:false});return true}
@@ -383,19 +432,21 @@ function hasKey(key,cid){const [t,id]=key.split(':');return t==='a'?A(id).course
 function grant(key,cid){const [t,id]=key.split(':');if(t==='a')A(id).courses[cid]={les:[]};else S.extraCourses[id+':'+cid]={les:[]}}
 function pendBuy(aid,cid){return S.reqs.find(r=>r.kind==='compra'&&r.aid===aid&&r.cid===cid&&r.status==='pend')}
 /* ---------- UI base ---------- */
-function render(){if(V.role==='atleta'&&!V.modal&&(S.reveal[V.aid]||[]).length)V.modal={k:'reveal',c:S.reveal[V.aid][0]};const y=(document.querySelector('.ph-body')||{}).scrollTop||0;const ym=window.scrollY;const key=[V.role,V.aid,V.cid,V.tab[V.role],V.page,V.form.pSel,V.form.dAth].join('|');const el=document.getElementById('app');el.className=key!==V._k?'anim':'';V._k=key;el.innerHTML=topBar()+'<div class="fict">Protótipo com dados fictícios · nomes inventados · sem dados reais</div>'+body()+modalHtml()+(V.burst?confetti(40,'burst'):'')+(V.toast?`<div class="toast">${esc(V.toast)}</div>`:'');const pb=document.querySelector('.ph-body');if(pb)pb.scrollTop=y;window.scrollTo(0,ym)}
+function render(){if(V.role==='atleta'&&!V.modal&&(S.reveal[V.aid]||[]).length)V.modal={k:'reveal',c:S.reveal[V.aid][0]};const y=(document.querySelector('.ph-body')||{}).scrollTop||0;const ym=window.scrollY;const key=[V.role,V.aid,V.cid,V.tab[V.role],V.page,V.form.pSel,V.form.dAth].join('|');const el=document.getElementById('app');el.className=key!==V._k?'anim':'';V._k=key;el.innerHTML=body()+demoHtml()+modalHtml()+(V.burst?confetti(40,'burst'):'')+(V.toast?`<div class="toast">${esc(V.toast)}</div>`:'');const pb=document.querySelector('.ph-body');if(pb)pb.scrollTop=y;window.scrollTo(0,ym)}
+function demoHtml(){return `<button class="demo" data-act="demo" title="Modo demonstração">${ic('eye',16)}</button>`+(V.demo?`<div class="demop"><div class="dh"><b>Modo demonstração</b><button data-act="demo">✕</button></div><p class="mut sm">Dados fictícios. Escolha quem está usando:</p>${topBar()}</div>`:'')}
 function topBar(){const R=[['atleta','Atleta'],['resp','Responsável'],['trn','Treinador / Dono'],['saci','SACI admin']];
  let act='';
  if(V.role==='atleta'||V.role==='resp')act=`<select data-chg="actor">${S.athletes.map(a=>`<option value="${a.id}" ${a.id===V.aid?'selected':''}>${V.role==='resp'?'Resp. de ':''}${a.name} (${a.cat}${a.id==='a1'?' · Seleção':''})</option>`).join('')}</select>`;
  if(V.role==='trn')act=`<select data-chg="actor">${S.coaches.map(c=>`<option value="${c.id}" ${c.id===V.cid?'selected':''}>${c.name}${c.dono?' (dono)':''} · ${P(c.partner).name}</option>`).join('')}</select>`;
- return `<div class="bar"><span class="brand">SACI</span><span class="mut sm">Ver como:</span><div class="seg">${R.map(r=>`<button class="${V.role===r[0]?'on':''}" data-act="role" data-v="${r[0]}">${r[1]}</button>`).join('')}</div>${act}<span class="sp"></span><button class="lk" data-act="about">Sobre / limitações</button><button class="lk" data-act="reset">Reiniciar demo</button></div>`}
+ return `<div class="bar"><div class="seg">${R.map(r=>`<button class="${V.role===r[0]?'on':''}" data-act="role" data-v="${r[0]}">${r[1]}</button>`).join('')}</div>${act}<button class="lk" data-act="about">Sobre / limitações</button><button class="lk" data-act="reset">Reiniciar demo</button></div>`}
 function body(){if(V.role==='atleta')return `<div class="stage">${phone(A(V.aid),'atleta')}</div>`;if(V.role==='resp')return `<div class="stage">${phone(A(V.aid),'resp')}</div>`;if(V.role==='trn')return webTrn();return webSaci()}
 const ACT={};
 document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el||el.disabled)return;const f=ACT[el.dataset.act];if(f)f(el.dataset,el)});
 document.addEventListener('input',e=>{const el=e.target;if(el.dataset.f)V.form[el.dataset.f]=el.type==='checkbox'?el.checked:el.value});
 document.addEventListener('change',e=>{const el=e.target;if(el.dataset.f){V.form[el.dataset.f]=el.type==='checkbox'?el.checked:el.value;if(el.dataset.r)render()}if(el.dataset.chg)ACT[el.dataset.chg](el.dataset,el)});
-ACT.role=d=>{V.role=d.v;V.modal=null;V.form={};render()};
-ACT.actor=(d,el)=>{if(V.role==='trn')V.cid=el.value;else V.aid=el.value;V.modal=null;V.form={};render()};
+ACT.demo=()=>{V.demo=!V.demo;render()};
+ACT.role=d=>{V.role=d.v;V.demo=false;V.modal=null;V.form={};render()};
+ACT.actor=(d,el)=>{V.demo=false;if(V.role==='trn')V.cid=el.value;else V.aid=el.value;V.modal=null;V.form={};render()};
 ACT.reset=()=>{S=initState();S.reveal={a1:['CV1']};V.modal=null;V.form={};render();toast('Demo reiniciada')};
 ACT.tab=d=>{V.tab[d.r]=d.v;V.form={};render()};
 ACT.close=()=>{V.modal=null;render()};
@@ -405,7 +456,7 @@ function phone(a,mode){const tabs=[['inicio','home','Início'],['album','album',
  const t=V.tab[mode];const fn={inicio:vInicio,album:vAlbum,trilha:vTrilha,cursos:vCursos,agenda:vAgenda,aprov:vAprov}[t];
  const pend=mode==='resp'?S.reqs.filter(r=>r.aid===a.id&&(r.kind==='compra'||r.kind==='conv')&&r.status==='pend').length+(a.consent.pendUpd?1:0):0;
  return `<div class="phone ${isPlay(a)?'th-play':'th-sport'}"><div class="ph-top"><b>${mode==='resp'?'Colorado · Família':'Colorado'}</b><span>${mode==='resp'?'Acompanhando '+esc(a.name.split(' ')[0]):esc(a.name.split(' ')[0])}</span></div><div class="ph-body">${fn(a,mode)}</div><nav class="tabs">${tabs.map(x=>`<button class="${t===x[0]?'on':''}" data-act="tab" data-r="${mode}" data-v="${x[0]}">${ic(x[1],22)}${x[2]}${x[0]==='aprov'&&pend?'<span class="dot"></span>':''}</button>`).join('')}</nav></div>`}
-function ccHtml(cid,own,tag){const c=CARDS[cid],pg=PAGES.find(p=>p.id===c.p);return `<div class="cc ${own?'on':'off'} ${cid==='CV1'?'sel':''}"><div class="ct"><span>#${cardNo(cid)}</span><span>${pg.t}</span></div><div class="ce">${ic(own?pg.ico:'lock',own?26:18)}</div><b>${esc(c.t)}</b><small>${tag}</small></div>`}
+function ccHtml(cid,own,tag){const c=CARDS[cid],pg=PAGES.find(p=>p.id===c.p);return `<div class="cc ${own?'on':'off'} ${cid==='CV1'?'sel':''}"><div class="ct"><span>#${cardNo(cid)}</span><span>${pg.t}</span></div>${c.tr?`<div class="tro">${trophy(c.tr,64,own)}</div>`:`<div class="ce">${ic(own?pg.ico:'lock',own?26:18)}</div>`}<b>${esc(c.t)}</b>${c.yr?`<span class="yr">${c.yr}</span>`:''}<small>${tag}</small></div>`}
 function cardTile(cid,a){const c=CARDS[cid],h=a.cards.find(x=>x.id===cid);
  return `<button style="display:block;width:100%;padding:0" data-act="cardinfo" data-c="${cid}" data-a="${a.id}">${ccHtml(cid,h,h?fd(h.d):esc(c.h))}</button>`}
 function vInicio(a,mode){
@@ -448,9 +499,15 @@ ACT.copen=d=>{const key=d.k||'a:'+V.aid;V.modal={k:'course',cid:d.c,key};render(
 ACT.cbuy=d=>{const a=A(V.aid),c=COURSES.find(x=>x.id===d.c),key='a:'+a.id;
  if(c.price&&d.m==='atleta'){S.reqs.push({id:uid(),kind:'compra',aid:a.id,cid:c.id,status:'pend'});S.notifs.push({id:uid(),aid:a.id,aud:'resp',text:a.name.split(' ')[0]+' quer o curso "'+c.t+'" ('+brl(c.price)+'). Aguarda sua aprovação.',seen:false});toast('Pedido enviado ao seu responsável')}
  else{grant(key,c.id);V.modal={k:'course',cid:c.id,key};render()}};
+function ytId(u){const x=String(u).match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);return x?x[1]:null}
+function vidHtml(key){const u=VIDEOS[key],id=u&&ytId(u);
+ if(id)return `<div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1" title="Vídeo da aula" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`;
+ return `<div class="vid"><video controls playsinline preload="metadata" src="videos/${key}.mp4" onerror="this.parentNode.innerHTML=document.getElementById('vph').innerHTML"></video></div>`}
 function courseM(){const m=V.modal,c=COURSES.find(x=>x.id===m.cid),h=hasKey(m.key,c.id)||{les:[]};
- return `<h3>${esc(c.t)}</h3><div class="sub">${esc(c.d)}</div>${c.unlock?'<div class="panel">Ao concluir as aulas, o guia de sinais é liberado no seu painel.</div>':''}${c.les.map((l,i)=>`<div class="card" style="margin:8px 0"><div class="row" style="display:flex;justify-content:space-between;align-items:center"><span>${h.les.includes(i)?'✓ ':''}Aula ${i+1}: ${esc(l)}</span>${h.les.includes(i)?'':`<button class="btn s" data-act="clesson" data-i="${i}">Concluir aula</button>`}</div></div>`).join('')}<p style="margin-top:10px"><button class="btn g" data-act="close">Fechar</button></p>`}
-ACT.clesson=d=>{const m=V.modal,c=COURSES.find(x=>x.id===m.cid),h=hasKey(m.key,c.id);const i=+d.i;if(!h.les.includes(i))h.les.push(i);
+ if(m.les!=null){const i=m.les,k=c.id+'-'+(i+1);return `<button class="lk2" data-act="lesback">← ${esc(c.t)}</button><div class="sub" style="margin-top:6px">Aula ${i+1} de ${c.les.length}</div><h3>${esc(c.les[i])}</h3>${vidHtml(k)}<p style="margin-top:12px">${h.les.includes(i)?'<span class="tag g">Aula concluída</span> <button class="btn g s" data-act="lesback">Voltar</button>':`<button class="btn" data-act="clesson" data-i="${i}">Concluir aula</button>`}</p>`}
+ return `<h3>${esc(c.t)}</h3><div class="sub">${esc(c.d)}</div>${c.unlock?'<div class="panel">Ao concluir as aulas, o guia de sinais é liberado no seu painel.</div>':''}${c.les.map((l,i)=>`<button class="les ${h.les.includes(i)?'ok':''}" data-act="lesopen" data-i="${i}"><span class="pl">${ic(h.les.includes(i)?'check':'play',18)}</span><span><b>Aula ${i+1}: ${esc(l)}</b><small>${h.les.includes(i)?'Concluída · rever':'Vídeo · 3 a 6 min'}</small></span></button>`).join('')}<p style="margin-top:10px"><button class="btn g" data-act="close">Fechar</button></p>`}
+ACT.lesopen=d=>{V.modal.les=+d.i;render()};ACT.lesback=()=>{V.modal.les=null;render()};
+ACT.clesson=d=>{const m=V.modal,c=COURSES.find(x=>x.id===m.cid),h=hasKey(m.key,c.id);const i=+d.i;if(!h.les.includes(i))h.les.push(i);m.les=null;{const [t0,id0]=m.key.split(':');if(t0==='a'&&c.id==='k_boas'&&i===0){['H1','H2','H3'].forEach(x=>award(id0,x));V.modal=null;render();return}}
  if(h.les.length>=c.les.length){const [t,id]=m.key.split(':');if(t==='a'){const ok=c.aud==='atleta'&&award(id,'G4');toast('Curso concluído!'+(ok?' Novo card: Curso concluído':''))}else if(c.unlock){T(id).modulo=true;log(T(id).name,'Concluiu módulo: leitura de jogo básico');toast('Módulo concluído. O guia de sinais foi liberado.')}else toast('Curso concluído!')}else render()};
 function vAgenda(a,mode){const evs=visEv(a),kinds={treino:'Treino',macro:'Evento do Inter',comp:'Competição',conv:'Convocação'};
  return `<div class="sub" style="margin:6px 0">Próximos compromissos</div>`+evs.map(e=>{const r=S.rsvp[e.id+a.id];const rs=e.kind==='treino'?'':(mode==='resp'||e.kind==='conv'?(r?`<span class="tag ${r==='vou'?'g':''}">${r==='vou'?'Vai':'Não vai'}</span>`:''):`<button class="btn s ${r==='vou'?'':'o'}" data-act="rsvp" data-e="${e.id}" data-v="vou">Vou</button> <button class="btn s ${r==='nao'?'':'o'}" data-act="rsvp" data-e="${e.id}" data-v="nao">Não vou</button>`);
@@ -476,7 +533,7 @@ ACT.dreq=d=>{const a=A(V.aid);if(S.reqs.some(r=>r.aid===a.id&&r.kind===d.v&&r.st
 /* ---------- modal ---------- */
 function modalHtml(){const m=V.modal;if(!m)return'';let h='';
  if(m.k==='quiz')h=quizM();else if(m.k==='course')h=courseM();
- else if(m.k==='card'){const c=CARDS[m.c],a=A(m.a),own=a.cards.find(x=>x.id===m.c);h=`<div class="flip" style="margin-bottom:10px">${ccHtml(m.c,own,own?fd(own.d):'')}</div><h3>${esc(c.t)}</h3><p class="sub">Página: ${PAGES.find(p=>p.id===c.p).t}</p><p style="margin:10px 0">${own?(m.c==='CV1'?'O Inter convocou você para a Seleção. Parabéns!':'Conquistado em '+fd(own.d)+'.'):'Como conseguir: '+esc(c.h)+'.'}</p><button class="btn g" data-act="close">Fechar</button>`}
+ else if(m.k==='card'){const c=CARDS[m.c],a=A(m.a),own=a.cards.find(x=>x.id===m.c);h=`<div class="flip" style="margin-bottom:10px">${ccHtml(m.c,own,own?fd(own.d):'')}</div><h3>${esc(c.t)}</h3><p class="sub">Página: ${PAGES.find(p=>p.id===c.p).t}</p><p style="margin:10px 0">${c.txt?esc(c.txt)+'<br>':''}${own?(m.c==='CV1'?'O Inter convocou você para a Seleção. Parabéns!':'Conquistado em '+fd(own.d)+'.'):'Como conseguir: '+esc(c.h)+'.'}</p><button class="btn g" data-act="close">Fechar</button>`}
  else if(m.k==='alt'){h=`<h3>Registrar altura</h3><p class="sub">${esc(A(m.aid).name)} · visível só para você, SACI e formação. Não aparece para o atleta.</p><div class="fr"><div><label>Altura (cm)</label><input type="number" step="0.1" data-f="altCm" placeholder="ex.: 152"></div></div><p class="mut">Data: ${fd(TODAY)} · medido por ${esc(T(V.cid).name)}</p><p style="margin-top:10px"><button class="btn" data-act="altsave" data-a="${m.aid}">Salvar</button> <button class="btn g" data-act="close">Cancelar</button></p>`}
  else if(m.k==='about')h=aboutM();
  else if(m.k==='reveal'){const c=CARDS[m.c];h=`<div class="reveal">${confetti(30,'conf')}<div class="sub">${m.c==='CV1'?'Comunicado do Inter':'Card novo!'}</div><div class="flip">${ccHtml(m.c,true,fd(TODAY))}</div><h3>${m.c==='CV1'?'Você foi convocado!':esc(c.t)}</h3><p class="sub" style="margin:4px 0 14px">${m.c==='CV1'?'Agora você faz parte da Seleção Colorada.':'Guardado na página '+PAGES.find(p=>p.id===c.p).t+' do seu álbum.'}</p><button class="btn" data-act="revok">${(S.reveal[V.aid]||[]).length>1?'Próximo card':'Guardar no álbum'}</button></div>`}
@@ -486,7 +543,7 @@ ACT.revok=()=>{const q=S.reveal[V.aid]||[];q.shift();const n=S.notifs.find(x=>x.
 ACT.about=()=>{V.modal={k:'about'};render()};
 function aboutM(){return `<h3>Sobre este protótipo</h3><p class="sub">Modelo para a startup. Dados fictícios, estado só na memória (recarregar reinicia).</p>
  <h3 style="font-size:14px">Limitações e pontos abertos</h3>
- <ul style="padding-left:18px" class="sm"><li>Tela do responsável: forma final (login próprio) a definir no desenvolvimento. [Inferência]</li><li>Altura e maturação podem ser dado de saúde: validar termo e acesso com jurídico. [Inferência]</li><li>Indicação sem evidência: mais simples para o treinador, mas a confirmação pelo SACI no evento passa a ser o único filtro. Critério mínimo (2 de jogo + 1 de aprendizagem/atitude) a calibrar. [Inferência]</li><li>Elementos do Inter: só cores, listras e estádio genérico; escudo e mascote oficiais dependem de autorização do clube.</li><li>Aplicação do ECA Digital (Lei 15.211/2025) a esta web app: revisão jurídica. [Verificado — texto do PIDA/BC-V3; aplicação concreta: Inferência]</li><li>Quem valida os desafios de fundamentos no Inter e preços dos cursos: em aberto. [Especulação]</li><li>Sem login, sem push, sem pagamento real; notificações simuladas.</li><li>Formação (observador da Seleção) não tem tela própria aqui: usa a visão do funil do SACI.</li></ul><p style="margin-top:10px"><button class="btn g" data-act="close">Fechar</button></p>`}
+ <ul style="padding-left:18px" class="sm"><li>Tela do responsável: forma final (login próprio) a definir no desenvolvimento. [Inferência]</li><li>Altura e maturação podem ser dado de saúde: validar termo e acesso com jurídico. [Inferência]</li><li>Indicação sem evidência: mais simples para o treinador, mas a confirmação pelo SACI no evento passa a ser o único filtro. Critério mínimo (2 de jogo + 1 de aprendizagem/atitude) a calibrar. [Inferência]</li><li>Troféus: desenhos originais inspirados, não réplicas das taças oficiais (que pertencem às entidades organizadoras). Títulos e anos: [Verificado — histórico do clube].</li><li>Vídeos: links do YouTube ou arquivos em videos/ precisam de direito de uso; canal oficial do Inter é a fonte indicada.</li><li>Elementos do Inter: só cores, listras e estádio genérico; escudo e mascote oficiais dependem de autorização do clube.</li><li>Aplicação do ECA Digital (Lei 15.211/2025) a esta web app: revisão jurídica. [Verificado — texto do PIDA/BC-V3; aplicação concreta: Inferência]</li><li>Quem valida os desafios de fundamentos no Inter e preços dos cursos: em aberto. [Especulação]</li><li>Sem login, sem push, sem pagamento real; notificações simuladas.</li><li>Formação (observador da Seleção) não tem tela própria aqui: usa a visão do funil do SACI.</li></ul><p style="margin-top:10px"><button class="btn g" data-act="close">Fechar</button></p>`}
 /* ---------- treinador / dono ---------- */
 function webTrn(){const c=T(V.cid),t=V.tab.trn;const tabs=[['turma','Turma'],['pres','Presença'],['comp','Competições'],['des','Desafios'],['dest','Indicar'],['crs','Cursos']];if(c.dono)tabs.push(['proj','Meu projeto']);
  const fn={turma:tTurma,pres:tPres,comp:tComp,des:tDes,dest:tDest,crs:tCrs,proj:tProj}[t];
