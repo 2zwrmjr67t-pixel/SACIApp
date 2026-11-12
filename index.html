@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SACI · Protótipo do app do atleta</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}
+:root{--red:#B3171D;--ink:#1d1d1f;--mut:#6b6b70;--line:#e4e2de;--paper:#f4f2ee}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--paper);color:var(--ink);font-size:15px;line-height:1.4}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+button:disabled{opacity:.45;cursor:not-allowed}
+select,input,textarea{font:inherit;color:inherit;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff;width:100%}
+.bar{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);padding:8px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.bar .brand{font-weight:700;color:var(--red);margin-right:6px}
+.seg{display:flex;gap:4px;flex-wrap:wrap}
+.seg button{padding:6px 10px;border-radius:999px;border:1px solid var(--line);font-size:13px;background:#fff}
+.seg button.on{background:var(--red);color:#fff;border-color:var(--red)}
+.bar select{width:auto;padding:6px 8px;font-size:13px}
+.bar .sp{flex:1}
+.bar .lk{font-size:12px;color:var(--mut);text-decoration:underline;padding:4px}
+.fict{background:#fff7d6;color:#6d5a00;font-size:12px;padding:4px 12px;text-align:center}
+.stage{display:flex;justify-content:center;padding:18px 8px 40px}
+.phone{--bg:#fff;--card:#fff;--tx:#1d1d1f;--mut:#6b6b70;--ac:#B3171D;--ac2:#ffc93c;--bd:#e4e2de;--soft:#faf6ee;width:100%;max-width:400px;height:780px;max-height:calc(100vh - 110px);min-height:560px;background:var(--bg);color:var(--tx);border-radius:28px;border:8px solid #1d1d1f;display:flex;flex-direction:column;overflow:hidden;position:relative;box-shadow:0 12px 40px rgba(0,0,0,.18)}
+.th-play{--bg:#fff8e8;--soft:#fff;--ac:#B3171D;--ac2:#ffc93c;--bd:#f0e2bf}
+.th-sport{--bg:#15181d;--card:#1f242b;--tx:#f1f1f1;--mut:#9aa0a8;--ac:#e0343b;--ac2:#e0343b;--bd:#2c323b;--soft:#1f242b}
+.ph-top{padding:10px 16px 6px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--mut)}
+.ph-top b{color:var(--ac)}
+.ph-body{flex:1;overflow-y:auto;padding:6px 14px 16px}
+.tabs{display:flex;border-top:1px solid var(--bd);background:var(--card)}
+.tabs button{flex:1;padding:8px 2px 7px;font-size:10.5px;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:2px;position:relative}
+.tabs button.on{color:var(--ac);font-weight:700}
+.dot{position:absolute;top:4px;right:22%;width:8px;height:8px;border-radius:50%;background:var(--ac)}
+.hero{display:flex;gap:12px;align-items:center;margin:8px 0}
+.hero .nm{font-size:20px;font-weight:700}
+.sub{color:var(--mut);font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+.chips span{font-size:12px;padding:4px 9px;border-radius:999px;background:var(--soft);border:1px solid var(--bd)}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}
+.tile{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px 4px;text-align:center}
+.tile b{display:block;font-size:20px;color:var(--ac)}
+.tile small{font-size:10.5px;color:var(--mut)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px;margin:10px 0}
+.card h4{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);margin-bottom:6px;font-weight:600}
+.card .big{font-weight:600}
+.wk{display:flex;gap:6px;margin:6px 0}
+.wk i{width:22px;height:22px;border-radius:50%;border:2px solid var(--bd)}
+.wk i.f{background:var(--ac);border-color:var(--ac)}
+.btn{background:var(--ac);color:#fff;padding:9px 14px;border-radius:10px;font-weight:600;font-size:14px}
+.btn.s{padding:6px 10px;font-size:13px}
+.btn.o{background:transparent;color:var(--ac);border:1.5px solid var(--ac)}
+.btn.g{background:#e9e7e2;color:var(--ink)}
+.note{display:flex;gap:8px;align-items:center;background:var(--ac2);color:#1d1d1f;padding:9px 10px;border-radius:12px;margin:8px 0;font-size:13px}
+.note span{flex:1}
+.note button{font-weight:700;font-size:13px}
+.th-sport .note{background:#2a2f38;color:var(--tx);border:1px solid var(--bd)}
+.ptabs{display:flex;gap:6px;overflow-x:auto;padding:6px 0}
+.ptabs button{white-space:nowrap;padding:6px 11px;border-radius:999px;border:1px solid var(--bd);font-size:13px;background:var(--card)}
+.ptabs button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.cd{border-radius:14px;padding:12px 8px;text-align:center;border:1.5px solid var(--bd);min-height:118px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:var(--card)}
+.cd.on{border-color:var(--ac);background:linear-gradient(160deg,var(--card),var(--soft));box-shadow:0 2px 8px rgba(179,23,29,.18)}
+.cd .em{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--ac);color:#fff}
+.cd.off .em{background:transparent;border:1.5px dashed var(--bd);color:var(--mut)}
+.cd b{font-size:13px}
+.cd small{font-size:11px;color:var(--mut)}
+.cd.off{opacity:.75}
+.ph h3{font-size:14px;margin:14px 0 6px;color:var(--mut)}
+.path{display:flex;flex-direction:column;gap:8px}
+.node{display:flex;gap:10px;align-items:center;text-align:left;background:var(--card);border:1.5px solid var(--bd);border-radius:14px;padding:10px}
+.node i{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#ddd;color:#fff;flex:none}
+.node b{font-size:14px;display:block}
+.node small{color:var(--mut);font-size:12px}
+.node.done i{background:#2e8b57}
+.node.cur{border-color:var(--ac)}
+.node.cur i{background:var(--ac)}
+.node.fut{opacity:.55}
+.crs{display:flex;flex-direction:column;gap:8px}
+.crs .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.price{font-weight:700;color:var(--ac)}
+.bar2{height:6px;border-radius:4px;background:var(--bd);overflow:hidden;margin:6px 0}
+.bar2 i{display:block;height:100%;background:var(--ac)}
+.ev{display:flex;gap:10px;align-items:flex-start}
+.ev .dt{min-width:46px;text-align:center;background:var(--soft);border:1px solid var(--bd);border-radius:10px;padding:4px}
+.ev .dt b{display:block;font-size:17px;color:var(--ac)}
+.ev .dt small{font-size:10px;color:var(--mut)}
+.tag{display:inline-block;font-size:11px;padding:2px 7px;border-radius:999px;background:var(--soft);border:1px solid var(--bd);color:var(--mut);margin-right:4px}
+.tag.r{background:#fde4e4;color:#8b1218;border-color:#f5bcbc}
+.tag.g{background:#e1f3e8;color:#1f6b40;border-color:#b8e0c8}
+.tag.y{background:#fff3c9;color:#6d5a00;border-color:#ecd98a}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;display:flex;align-items:center;justify-content:center;padding:14px}
+.modal>div{background:var(--bg,#fff);color:var(--tx,var(--ink));width:100%;max-width:420px;max-height:88vh;overflow-y:auto;border-radius:18px;padding:16px;--card:#fff;--bd:#e4e2de;--soft:#faf6ee;--ac:#B3171D;--mut:#6b6b70;--tx:#1d1d1f;--bg:#fff}
+.modal h3{margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;padding:11px;margin:6px 0;border:1.5px solid var(--bd);border-radius:12px;background:var(--card)}
+.opt.ok{border-color:#2e8b57;background:#e1f3e8}
+.opt.no{border-color:#c78a1c;background:#fff3c9}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:#1d1d1f;color:#fff;padding:10px 16px;border-radius:12px;z-index:60;font-size:14px;max-width:90vw}
+.web{max-width:1100px;margin:0 auto;padding:12px;display:grid;grid-template-columns:1fr;gap:12px}
+.side{display:flex;gap:6px;overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px}
+.side button{white-space:nowrap;padding:8px 12px;border-radius:8px;font-size:14px;display:flex;gap:6px;align-items:center}
+.side button.on{background:var(--red);color:#fff}
+.main{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;min-width:0}
+@media(min-width:860px){.web{grid-template-columns:200px 1fr}.side{flex-direction:column;align-self:start}}
+.main h2{font-size:18px;margin-bottom:10px}
+.main h3{font-size:15px;margin:16px 0 6px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:12px}
+.kpi{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--paper)}
+.kpi b{font-size:24px;color:var(--red);display:block}
+.kpi small{color:var(--mut)}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.03em}
+.fr{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:8px 0}
+.fr label{font-size:12px;color:var(--mut);display:block;margin-bottom:3px}
+.main .btn{background:var(--red)}
+.main .btn.o{background:transparent;color:var(--red);border-color:var(--red)}
+.main .btn.g{background:#e9e7e2;color:var(--ink)}
+.sig{display:flex;gap:8px;align-items:flex-start;padding:8px;border:1px solid var(--line);border-radius:10px;margin:6px 0}
+.sig input[type=checkbox]{width:auto;margin-top:3px}
+.sig .ev2{flex:1}
+.sig .ev2 input[type=text]{margin-top:5px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;font-size:14px}
+.panel.w{background:#fff7d6;border-color:#ecd98a}
+.mut{color:var(--mut);font-size:13px}
+.ck{display:flex;gap:6px;align-items:center;margin:4px 0}
+.ck input{width:auto}
+.av{display:inline-block;vertical-align:middle}
+.sm{font-size:12px}
+.hr{border:0;border-top:1px solid var(--line);margin:12px 0}
+.phone select,.phone input{background:var(--card);color:var(--tx);border-color:var(--bd)}
+/* ===== v2: vermelho, branco e cinza + dinamismo ===== */
+:root{--red:#C4161C;--red2:#8E0F14;--g1:#f4f4f5;--g2:#e2e2e5;--g3:#8a8d93;--g4:#3a3c41}
+body{background:var(--g1)}
+.bar{background:var(--red);border:0;color:#fff;background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.06) 0 14px,transparent 14px 28px)}
+.bar .brand{color:#fff;letter-spacing:.08em}
+.bar .mut{color:#ffe1e1}
+.seg button{background:transparent;color:#fff;border-color:rgba(255,255,255,.55)}
+.seg button.on{background:#fff;color:var(--red);border-color:#fff}
+.bar select{background:#fff;color:var(--ink);border:0}
+.bar .lk{color:#fff}
+.fict{background:#fff;color:var(--g3);border-bottom:1px solid var(--g2)}
+.phone{border-color:#26282c}
+.th-play{--bg:#f5f5f6;--card:#fff;--soft:#fff;--tx:#1d1d1f;--mut:#74777d;--ac:#C4161C;--ac2:#C4161C;--bd:#e3e3e6}
+.th-sport{--bg:#26282c;--card:#313338;--tx:#f2f2f2;--mut:#a3a6ab;--ac:#e2353c;--ac2:#e2353c;--bd:#3d4046;--soft:#2d2f34}
+.ph-top{background:var(--ac);color:#fff;padding:10px 16px}
+.ph-top b{color:#fff;letter-spacing:.06em}
+.ph-body{padding-top:0}
+.anim .ph-body>*{animation:rise .38s both}
+.anim .ph-body>*:nth-child(2){animation-delay:.04s}.anim .ph-body>*:nth-child(3){animation-delay:.08s}.anim .ph-body>*:nth-child(4){animation-delay:.12s}.anim .ph-body>*:nth-child(5){animation-delay:.16s}.anim .ph-body>*:nth-child(6){animation-delay:.2s}.anim .ph-body>*:nth-child(n+7){animation-delay:.24s}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.tabs button{transition:color .2s}
+.tabs button.on::after{content:"";position:absolute;top:0;left:28%;right:28%;height:3px;border-radius:0 0 3px 3px;background:var(--ac);animation:grow .25s both}
+@keyframes grow{from{transform:scaleX(0)}to{transform:none}}
+.tabs button.on svg{animation:pop .3s}
+@keyframes pop{50%{transform:scale(1.25)}}
+.dot{background:var(--ac);box-shadow:0 0 0 0 rgba(196,22,28,.6);animation:ping 1.6s infinite}
+@keyframes ping{70%{box-shadow:0 0 0 7px rgba(196,22,28,0)}}
+/* hero */
+.hero2{margin:0 -14px 10px;padding:16px 16px 18px;background:var(--ac);color:#fff;position:relative;overflow:hidden;background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.07) 0 16px,transparent 16px 32px)}
+.hero2 .stad{position:absolute;right:-20px;bottom:-6px;width:260px;opacity:.22}
+.hero2 .hrow{display:flex;gap:12px;align-items:center;position:relative}
+.hero2 .av{border-radius:50%;box-shadow:0 0 0 3px #fff}
+.hero2 .nm{font-size:21px;font-weight:800;line-height:1.1}
+.hero2 .hsub{opacity:.9;font-size:13px}
+.th-sport .hero2{background-color:#1d1e21;border-bottom:3px solid var(--ac)}
+.hero2.sel{background-color:var(--red2)}
+.hero2.sel::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.22) 45%,transparent 60%);animation:sheen 3.2s infinite}
+@keyframes sheen{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.selb{display:inline-block;margin-top:6px;background:#fff;color:var(--red);font-weight:800;font-size:11px;padding:3px 9px;border-radius:999px;letter-spacing:.04em;text-transform:uppercase}
+.chips span{background:var(--card)}
+.tile{position:relative;overflow:hidden}
+.tile svg{color:var(--ac);opacity:.9}
+.anim .tile b{animation:pop .5s .2s both}
+.card{position:relative}
+.card.hl{border-color:var(--ac);border-width:1.5px}
+.card.hl::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:4px;border-radius:0 4px 4px 0;background:var(--ac)}
+.note,.th-sport .note{background:var(--card);color:var(--tx);border:1.5px solid var(--ac)}
+.note svg{color:var(--ac);animation:pop .6s 2}
+.anim .wk i.f{animation:pop .4s both}
+/* cards colecionáveis */
+.cc{border-radius:14px;overflow:hidden;background:var(--card);border:1.5px solid var(--bd);text-align:center;display:flex;flex-direction:column;min-height:150px;transition:transform .2s}
+.cc .ct{display:flex;justify-content:space-between;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:6px 8px;background:var(--g2);color:var(--g3)}
+.cc .ce{margin:12px auto 6px;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;border:2px dashed var(--bd);color:var(--mut)}
+.cc b{font-size:13px;padding:0 8px}
+.cc small{font-size:11px;color:var(--mut);padding:2px 8px 10px}
+.cc.on{border-color:var(--ac);box-shadow:0 4px 14px rgba(196,22,28,.18)}
+.cc.on .ct{background:var(--ac);color:#fff;background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.12) 0 8px,transparent 8px 16px)}
+.cc.on .ce{background:var(--ac);border:3px solid #fff;color:#fff;box-shadow:0 0 0 2px var(--ac)}
+.cc.on:hover{transform:translateY(-3px) rotate(-1deg)}
+.cc.off{opacity:.7}
+.cc.sel{border-color:var(--red2)}
+.cc.sel .ct{background-color:var(--red2)}
+.cc.sel .ce{background:var(--red2)}
+.prog{height:8px;border-radius:6px;background:var(--bd);overflow:hidden;margin:2px 0 10px}
+.prog i{display:block;height:100%;background:var(--ac);transform-origin:left}.anim .prog i{animation:fill .8s both}
+@keyframes fill{from{transform:scaleX(0)}}
+/* trilha em zigue-zague */
+.phz{margin:14px 0 4px;display:flex;align-items:center;gap:8px}
+.phz b{background:var(--ac);color:#fff;font-size:11px;padding:3px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.05em}
+.phz span{font-weight:700}
+.zig{position:relative;padding:6px 0}
+.zig::before{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:3px dashed var(--bd)}
+.zn{position:relative;display:flex;align-items:center;gap:10px;margin:10px 0;width:62%}
+.zn.p0{margin-left:0}.zn.p1{margin-left:19%}.zn.p2{margin-left:38%}
+.zn .orb{width:54px;height:54px;flex:none;border-radius:50%;display:grid;place-items:center;background:var(--g2);color:#fff;border:4px solid var(--bg);box-shadow:0 3px 0 rgba(0,0,0,.15)}
+.zn.done .orb{background:var(--ac)}
+.zn.cur .orb{background:#fff;color:var(--ac);border-color:var(--ac);animation:pulse 1.4s infinite}
+.th-sport .zn.cur .orb{background:var(--card)}
+.zn.fut .orb{background:var(--g3);opacity:.5}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(196,22,28,.5)}70%{box-shadow:0 0 0 12px rgba(196,22,28,0)}100%{box-shadow:0 0 0 0 rgba(196,22,28,0)}}
+.zn .lb{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:6px 9px;font-size:13px;line-height:1.25}
+.zn .lb small{display:block;color:var(--mut);font-size:11px}
+.zn.fut .lb{opacity:.6}
+.zn button.orb:disabled{opacity:1;cursor:default}
+.zn.fut button.orb:disabled{opacity:.5}
+/* revelação de card */
+.reveal{text-align:center;position:relative;overflow:hidden;padding-top:8px}
+.reveal h3{font-size:22px;color:var(--ac);margin-top:12px}
+.flip{perspective:800px;width:190px;margin:0 auto}
+.flip .cc{min-height:240px;animation:flipin .9s cubic-bezier(.2,.8,.3,1.2) both}
+.flip .cc .ce{width:84px;height:84px;margin-top:28px}
+.flip .cc b{font-size:17px;margin-top:8px}
+@keyframes flipin{0%{transform:rotateY(180deg) scale(.5);opacity:0}60%{transform:rotateY(-12deg) scale(1.06);opacity:1}100%{transform:none}}
+.conf{position:absolute;inset:0;pointer-events:none}
+.conf i{position:absolute;top:-12px;width:8px;height:14px;border-radius:2px;animation:fall 1.8s ease-in both}
+@keyframes fall{to{transform:translateY(440px) rotate(540deg);opacity:0}}
+.burst{position:fixed;inset:0;pointer-events:none;z-index:70}
+.burst i{position:absolute;top:-12px;width:8px;height:14px;border-radius:2px;animation:fall2 1.6s ease-in both}
+@keyframes fall2{to{transform:translateY(100vh) rotate(600deg);opacity:0}}
+.toast{animation:tin .3s both;background:var(--red)}
+@keyframes tin{from{opacity:0;transform:translate(-50%,16px)}}
+.opt{transition:transform .15s}.opt:active{transform:scale(.97)}
+.opt.ok{border-color:var(--red);background:#fdeaea;animation:pop .35s}
+.opt.no{border-color:var(--g3);background:var(--g1)}
+/* tags e painéis só em vermelho/cinza */
+.tag.g{background:#fdeaea;color:var(--red2);border-color:#f3b9bb}
+.tag.y{background:var(--g1);color:var(--g4);border-color:var(--g2)}
+.tag.r{background:var(--red);color:#fff;border-color:var(--red)}
+.panel.w{background:#fdeaea;border-color:#f3b9bb}
+.price{color:var(--ac)}
+/* web */
+.side{border:0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.main{border:0;box-shadow:0 1px 3px rgba(0,0,0,.06);border-top:4px solid var(--red)}
+.anim .main>*{animation:rise .3s both}
+.kpi{background:#fff;border:1px solid var(--g2);border-left:4px solid var(--red)}
+.anim .kpi b{animation:pop .5s both}
+.chip{display:inline-block;margin:4px 6px 4px 0;padding:9px 13px;border-radius:999px;border:1.5px solid var(--g2);background:#fff;font-size:14px;transition:all .15s}
+.chip.on{background:var(--red);border-color:var(--red);color:#fff;transform:scale(1.03)}
+.chip.ctx.on{background:var(--g4);border-color:var(--g4)}
+.cnt{display:inline-block;background:var(--red);color:#fff;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:700;margin-left:6px}
+</style></head><body><div id="app"></div>
+<script>const TODAY='2026-11-05';
+const CATS=['Sub-9','Sub-11','Sub-13','Sub-15','Sub-17'];
+const FUNIL=['Sinalizado','Em acompanhamento','Na seleção do polo','Convocado à Seleção','Convidado para avaliação','Encaminhado','Mantido na rede','Arquivado'];
+const SIGNALS=[
+{id:'J1',g:'Jogo',t:'Protege a bola sob pressão'},
+{id:'J2',g:'Jogo',t:'Olha antes de receber'},
+{id:'J3',g:'Jogo',t:'Procura jogar para frente'},
+{id:'J4',g:'Jogo',t:'Tenta o 1x1 no momento certo'},
+{id:'J5',g:'Jogo',t:'Se posiciona para receber'},
+{id:'J6',g:'Jogo',t:'Reage à perda na hora'},
+{id:'A1',g:'Aprendizagem',t:'Muda depois de uma orientação'},
+{id:'A2',g:'Aprendizagem',t:'Arrisca soluções novas'},
+{id:'T1',g:'Atitude',t:'Pede a bola no momento difícil'},
+{id:'T2',g:'Atitude',t:'Mantém o esforço no jogo difícil'},
+{id:'T3',g:'Atitude',t:'Convive bem com o grupo'}];
+const PAGES=[{id:'comp',t:'Competições',ico:'trophy'},{id:'fund',t:'Fundamentos',ico:'ball'},{id:'cons',t:'Conquistas',ico:'star'},{id:'marc',t:'Marcos Inter',ico:'flag'},{id:'col',t:'Colorado',ico:'shield'}];
+const CARDS={
+C1:{p:'comp',t:'Primeira competição',h:'Jogue uma competição'},
+C2:{p:'comp',t:'Festival Colorado',h:'Vá ao Festival Colorado'},
+C3:{p:'comp',t:'Copa de bairro',h:'Jogue uma Copa de bairro'},
+C4:{p:'comp',t:'Torneio de inverno',h:'Jogue o Torneio de inverno'},
+C5:{p:'comp',t:'Final no Beira-Rio',h:'Chegue a uma final no Beira-Rio'},
+F1:{p:'fund',t:'Domínio: 10 seguidos',h:'Faça 10 domínios seguidos'},
+F2:{p:'fund',t:'Condução com as duas pernas',h:'Conduza a bola com as duas pernas'},
+F3:{p:'fund',t:'Passe com a perna menos forte',h:'Passe com a perna menos forte'},
+F4:{p:'fund',t:'Controle orientado',h:'Controle e já saia para o lado'},
+F5:{p:'fund',t:'Chute colocado',h:'Acerte o alvo em 3 de 5 chutes'},
+F6:{p:'fund',t:'Passe curto em movimento',h:'Faça 10 passes em movimento'},
+G1:{p:'cons',t:'Primeiro treino',h:'Vá ao primeiro treino'},
+G2:{p:'cons',t:'10 treinos',h:'Complete 10 treinos'},
+G3:{p:'cons',t:'Constância: 4 semanas',h:'Cumpra a meta 4 semanas'},
+G4:{p:'cons',t:'Curso concluído',h:'Conclua um curso'},
+G5:{p:'cons',t:'Quiz perfeito',h:'Acerte tudo num quiz'},
+G6:{p:'cons',t:'Primeira missão',h:'Complete uma missão'},
+M1:{p:'marc',t:'Visita ao Beira-Rio',h:'Visite o Beira-Rio'},
+M2:{p:'marc',t:'Dia de jogo no estádio',h:'Assista a um jogo no estádio'},
+M3:{p:'marc',t:'Aniversário do Colorado',h:'Participe da festa do clube'},
+CV1:{p:'col',t:'Convocado à Seleção',h:''}};
+const COMP_OPTS=['C1','C3','C4'];
+const QUIZ={
+q1:{t:'Quiz: quem faz o quê?',qs:[{q:'Quem defende o gol usando as mãos?',o:['Goleiro','Atacante','Lateral']},{q:'Quem ajuda a levar a bola da defesa ao ataque?',o:['O meio-campo','Só o goleiro','Ninguém']}]},
+q2:{t:'Quiz: regras do jogo',qs:[{q:'Quantos jogadores de cada time começam no futebol de campo?',o:['11','9','13']},{q:'O colega caiu no chão. O que fazer?',o:['Ver se ele está bem','Rir','Seguir sem olhar']}]},
+q3:{t:'Quiz: o Colorado',qs:[{q:'Qual a cor da camisa do Inter?',o:['Vermelha','Azul','Verde']},{q:'Como se chama o estádio do Inter?',o:['Beira-Rio','Arena do Rio','Estádio do Mar']}]},
+q4:{t:'Leitura de jogo: olhar antes de receber',qs:[{q:'Quando é melhor olhar o campo?',o:['Antes de a bola chegar','Só depois de receber','Nunca, só a bola']},{q:'Para que serve olhar por cima do ombro?',o:['Saber onde estão o espaço e o adversário','Procurar a torcida','Ganhar tempo']}]},
+q5:{t:'Leitura de jogo: espaço e apoio',qs:[{q:'O colega está marcado. O que ajuda mais?',o:['Oferecer uma linha de passe','Ficar parado','Chutar de qualquer jeito']},{q:'Espaço livre é...',o:['Onde ninguém atrapalha o próximo passe','Só o meio do campo','Onde a bola não chega']}]},
+q6:{t:'Quiz: hábitos de atleta',qs:[{q:'O que mais ajuda a recuperar entre treinos?',o:['Dormir bem','Dormir pouco','Ficar acordado jogando']},{q:'Sentiu uma dor forte no treino. O que fazer?',o:['Avisar o treinador e um adulto','Esconder','Treinar mais forte']}]},
+q7:{t:'Quiz: jogo coletivo',qs:[{q:'O time perdeu a bola. O que fazer?',o:['Reagir na hora para recuperar','Reclamar do colega','Esperar parado']},{q:'O que faz um time forte?',o:['Todos ajudando','Um só jogador','Ninguém conversando']}]},
+q8:{t:'Quiz: fair play',qs:[{q:'O adversário fez um belo lance. O que fazer?',o:['Reconhecer e seguir','Fazer cara feia','Parar de jogar']},{q:'O árbitro marcou contra você. O que fazer?',o:['Respeitar e continuar','Gritar com ele','Sair de campo']}]}};
+const COURSES=[
+{id:'k_boas',aud:'atleta',t:'Boas-vindas ao Colorado',d:'História, valores e o Beira-Rio.',price:0,les:['Nossa história','O Beira-Rio','Os valores do clube']},
+{id:'k_fund',aud:'atleta',t:'Fundamentos em casa',d:'Desafios com a bola para fazer em casa.',price:0,les:['Domínio','Condução','Passe na parede']},
+{id:'k_jogo',aud:'atleta',t:'Jogo do Colorado: olhar antes de receber',d:'Leitura de jogo em linguagem de atleta.',price:29.9,les:['Olhar antes','Espaço e apoio','Decidir rápido']},
+{id:'k_hab',aud:'atleta',t:'Hábitos de campeão',d:'Sono, rotina e escola: o que ajuda no jogo.',price:19.9,les:['Sono e descanso','Rotina e escola','Cuidar do corpo']},
+{id:'k_fam1',aud:'familia',t:'Apoiar sem pressionar',d:'Como acompanhar o jogo e o treino de longe.',price:0,les:['Antes do jogo','Depois do jogo','Conversas em casa']},
+{id:'k_fam2',aud:'familia',t:'Escola e rotina na base',d:'Organizar estudo, sono e treino.',price:24.9,les:['Planejar a semana','Falar com a escola','Dias de viagem']},
+{id:'k_trn1',aud:'treinador',t:'Leitura de jogo: módulo básico',d:'Libera o guia de sinais (Sub-11 e Sub-13).',price:0,les:['O guia de sinais','Evidência: o que você viu','Cuidados com maturação'],unlock:true},
+{id:'k_trn2',aud:'treinador',t:'Metodologia Celeiro de Ases (avançado)',d:'Metodologia do clube para a base.',price:149,les:['Princípios','Sessão-modelo','Planejamento']},
+{id:'k_trn3',aud:'treinador',t:'Certificação Inter para treinadores',d:'Selo do clube para o parceiro.',price:0,les:['Prova teórica','Prática supervisionada']}];
+const MATUR=[{v:'sem',t:'Sem indicação'},{v:'obs',t:'A observar'},{v:'tardia',t:'Indica maturação tardia'}];
+const SKINS=['#f1c9a5','#d9a87a','#b07a4f','#7a4e2d'];
+const HAIRC=['#2b2118','#5a3a22','#c9a24a'];
+const HAIRS=['curto','cacheado','raspado'];
+
+function initState(){return{
+partners:[
+{id:'p1',name:'Projeto Colorado',city:'Canoas',reg:'Metropolitana',mod:'Campo',faixa:'5–14',porte:120,estr:'2 campos',perfil:'Projeto',forma:'Relacionamento recorrente',comp:'Responde contatos e cumpre prazos',cap:'Recebe eventos e mantém calendário',prox:'Convite ao Festival Colorado',proxD:'2026-11-14',contato:'Rodrigo Menezes',ult:'2026-10-22',hist:[{d:'2026-10-22',tipo:'Visita',n:'Visita à escolinha e alinhamento do calendário.'},{d:'2026-09-03',tipo:'Evento',n:'Participou da Copa de bairro.'}]},
+{id:'p2',name:'Escolinha do Inter · Santo Ângelo',city:'Santo Ângelo',reg:'Missões',mod:'Futsal',faixa:'6–13',porte:80,estr:'1 quadra',perfil:'Escolinha',forma:'Participação pontual',comp:'Responde com atraso',cap:'Recebe eventos pequenos',prox:'Reunião de alinhamento',proxD:'2026-11-12',contato:'Carla Antunes',ult:'2026-10-30',hist:[{d:'2026-10-30',tipo:'Contato',n:'Ligação para agendar a reunião.'}]},
+{id:'p3',name:'Escolinha do Inter · Passo Fundo',city:'Passo Fundo',reg:'Norte',mod:'Ambos',faixa:'5–12',porte:60,estr:'1 campo e 1 quadra',perfil:'Escolinha',forma:'Cooperação',comp:'Responde contatos',cap:'Responsável identificado',prox:'Visita técnica',proxD:'2026-11-26',contato:'Marcos Teixeira',ult:'2026-10-10',hist:[{d:'2026-10-10',tipo:'Visita',n:'Primeira visita técnica ao projeto.'}]}],
+coaches:[
+{id:'tr1',name:'Rodrigo Menezes',partner:'p1',dono:true,modulo:true},
+{id:'tr2',name:'Carla Antunes',partner:'p2',dono:false,modulo:true},
+{id:'tr3',name:'Marcos Teixeira',partner:'p3',dono:false,modulo:false}],
+athletes:[
+{id:'a1',name:'Gabriel Souza',cat:'Sub-13',mod:'Campo',pos:'Meia',foot:'Direita',partner:'p1',coach:'tr1',resp:'Ana Souza',avatar:{skin:1,hair:0,hc:0},
+stats:{treinos:24,eventos:5,missoes:31},week:{goal:4,done:3},done:['q1','q2','q4','d3'],
+cards:[{id:'C1',d:'2026-05-14'},{id:'C3',d:'2026-09-03'},{id:'F1',d:'2026-06-20'},{id:'F2',d:'2026-07-18'},{id:'F3',d:'2026-09-12'},{id:'G1',d:'2026-03-04'},{id:'G2',d:'2026-04-30'},{id:'G3',d:'2026-10-08'},{id:'M1',d:'2026-08-02'},{id:'CV1',d:'2026-10-28'}],
+altura:[{d:'2026-03-10',cm:151,by:'Rodrigo Menezes'},{d:'2026-09-15',cm:156,by:'Rodrigo Menezes'}],mat:'sem',
+courses:{k_boas:{les:[0,1,2]}},consent:{termo:'v1.1',d:'2026-08-12',sinais:true,pendUpd:false},limit:60,
+trilha:[{t:'Fase 1 · Primeiros passos',n:[{id:'q1',k:'quiz'},{id:'q2',k:'quiz'}]},{t:'Fase 2 · Leitura de jogo',n:[{id:'q4',k:'quiz'},{id:'d3',k:'des',card:'F3',t:'Desafio: passe com a perna menos forte'}]},{t:'Fase 3 · Jogo coletivo',n:[{id:'q5',k:'quiz'},{id:'q7',k:'quiz'},{id:'q8',k:'quiz'}]},{t:'Fase 4 · Temporada',n:[{id:'d4',k:'des',card:'F4',t:'Desafio: controle orientado'},{id:'q6',k:'quiz'}]}]},
+{id:'a2',name:'Lucas Martins',cat:'Sub-11',mod:'Futsal',pos:'Ala',foot:'Esquerda',partner:'p2',coach:'tr2',resp:'Paulo Martins',avatar:{skin:0,hair:1,hc:1},
+stats:{treinos:11,eventos:2,missoes:9},week:{goal:4,done:2},done:['q1','q2','d1'],
+cards:[{id:'C1',d:'2026-08-22'},{id:'F1',d:'2026-09-30'},{id:'G1',d:'2026-05-10'},{id:'G2',d:'2026-10-02'}],
+altura:[{d:'2026-04-02',cm:128,by:'Carla Antunes'},{d:'2026-10-05',cm:129.5,by:'Carla Antunes'}],mat:'tardia',
+courses:{k_boas:{les:[0]}},consent:{termo:'v1.1',d:'2026-08-20',sinais:true,pendUpd:true},limit:60,
+trilha:[{t:'Primeiros passos',n:[{id:'q1',k:'quiz'},{id:'q2',k:'quiz'}]},{t:'Dominando a bola',n:[{id:'d1',k:'des',card:'F1',t:'Desafio: 10 domínios'},{id:'q3',k:'quiz'},{id:'d2',k:'des',card:'F2',t:'Desafio: duas pernas'}]},{t:'Jogo em equipe',n:[{id:'q7',k:'quiz'},{id:'q8',k:'quiz'}]}]},
+{id:'a3',name:'Davi Ribeiro',cat:'Sub-9',mod:'Campo',pos:'Ainda explorando',foot:'A descobrir',partner:'p3',coach:'tr3',resp:'Juliana Ribeiro',avatar:{skin:2,hair:2,hc:2},
+stats:{treinos:3,eventos:0,missoes:0},week:{goal:3,done:0},done:[],
+cards:[{id:'G1',d:'2026-10-17'}],
+altura:[{d:'2026-08-01',cm:121,by:'Marcos Teixeira'}],mat:'sem',
+courses:{},consent:{termo:'v1.1',d:'2026-10-10',sinais:false,pendUpd:false},limit:30,
+trilha:[{t:'Primeiros passos',n:[{id:'q1',k:'quiz'},{id:'q2',k:'quiz'},{id:'d1',k:'des',card:'F1',t:'Desafio: 10 domínios'}]},{t:'Conhecendo o Colorado',n:[{id:'q3',k:'quiz'},{id:'q8',k:'quiz'}]}]}],
+funil:{a1:{status:'Convocado à Seleção',rev:'2027-04-28'},a2:{status:'Sinalizado',rev:'2027-04-30'}},
+signals:[
+{id:'s1',aid:'a1',tr:'tr1',d:'2026-09-20',obs:{J1:{ev:'Jogo vs Vila Nova, saída sob pressão no meio'},J2:{ev:'Treino-jogo, olhou antes de receber 4 vezes'},J3:{ev:'Copa de bairro, progressão pelo corredor central'},A1:{ev:'Ajustou o posicionamento após orientação no intervalo'}},conf:{J1:'2026-10-04',J2:'2026-10-04',J3:'2026-10-04',A1:'2026-10-04'}},
+{id:'s2',aid:'a2',tr:'tr2',d:'2026-10-30',obs:{J1:{ev:'Jogo vs Vila Alegre, segurou a bola sob pressão'},J5:{ev:'Treino coletivo, ofereceu apoio sem a bola'},A2:{ev:'Tentou lance novo no 2x2 e repetiu no jogo'}},conf:{}}],
+events:[
+{id:'e1',kind:'treino',t:'Treino da turma Sub-13',d:'2026-11-06',h:'18:00',pl:'Campo da escolinha',partner:'p1'},
+{id:'e2',kind:'treino',t:'Treino da turma Sub-11',d:'2026-11-06',h:'17:00',pl:'Quadra do projeto',partner:'p2'},
+{id:'e3',kind:'treino',t:'Treino da turma Sub-9',d:'2026-11-07',h:'09:00',pl:'Campo da associação',partner:'p3'},
+{id:'e4',kind:'macro',t:'Festival Colorado',d:'2026-11-14',h:'14:00',pl:'Centro de treinamento',cats:['Sub-9','Sub-11','Sub-13'],card:'C2',closed:false},
+{id:'e5',kind:'comp',t:'Copa de bairro',d:'2026-11-21',h:'09:00',pl:'Canoas',partners:['p1','p2']},
+{id:'e6',kind:'conv',t:'Rodada Colorada Sub-13',d:'2026-12-05',h:'09:00',pl:'Centro de treinamento',who:['a1'],rel:true}],
+rsvp:{},pres:{},notifs:[
+{id:'n1',aid:'a1',aud:'resp',text:'Comunicado do Inter: Gabriel foi convocado para a Seleção Sub-13. Veja a Agenda.',seen:false},
+{id:'n2',aid:'a1',aud:'atleta',text:'Novo card no seu álbum: Convocado à Seleção.',seen:false}],
+reqs:[{id:'r1',aid:'a1',kind:'compra',cid:'k_hab',status:'pend'}],audit:[{d:'2026-10-30',who:'Carla Antunes',t:'Registrou sinalização (Lucas Martins)'},{d:'2026-10-28',who:'SACI',t:'Emitiu convocação: Rodada Colorada Sub-13'},{d:'2026-10-04',who:'SACI',t:'Confirmou sinais (Gabriel Souza)'}],
+extraCourses:{},counts:{archived:0},compsLog:[]};}
+</script><script>let S=initState();S.reveal={a1:['CV1']};
+let V={role:'atleta',aid:'a1',cid:'tr1',tab:{atleta:'inicio',resp:'inicio',trn:'turma',saci:'painel'},page:'comp',modal:null,toast:null,form:{}};
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const A=id=>S.athletes.find(a=>a.id===id),P=id=>S.partners.find(p=>p.id===id),T=id=>S.coaches.find(c=>c.id===id);
+const fd=d=>{if(!d)return'';const x=d.split('-');return x[2]+'/'+x[1]+'/'+x[0]};
+const dd=d=>d.split('-')[2],mm=d=>['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'][+d.split('-')[1]-1];
+const brl=v=>v?'R$ '+v.toFixed(2).replace('.',','):'Gratuito';
+const isPlay=a=>a.cat==='Sub-9'||a.cat==='Sub-11';
+const uid=()=>'x'+Math.random().toString(36).slice(2,8);
+const IC={home:'<path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/>',album:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/>',trail:'<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h6a4 4 0 000-8h-4a4 4 0 010-8h6"/>',book:'<path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2zM4 19a2 2 0 002 2h13"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',trophy:'<path d="M7 4h10v5a5 5 0 01-10 0zM7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3M12 14v4M8 21h8"/>',ball:'<circle cx="12" cy="12" r="9"/><path d="M12 8l3 2-1 4h-4l-1-4zM12 3v5M21 10l-6 0M4 9l5 1M8 20l2-6M16 20l-2-6"/>',star:'<path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.2 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',flag:'<path d="M5 21V4M5 4h12l-2 4 2 4H5"/>',check:'<path d="M5 12l5 5 9-10"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',bell:'<path d="M6 17V11a6 6 0 0112 0v6l2 2H4zM10 21h4"/>'};
+const ic=(n,s)=>`<svg width="${s||20}" height="${s||20}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[n]||''}</svg>`;
+function avatar(a,s){const v=a.avatar,sk=SKINS[v.skin],hc=HAIRC[v.hc],hs=HAIRS[v.hair];
+ const hair=hs==='cacheado'?`<circle cx="30" cy="22" r="5" fill="${hc}"/><circle cx="50" cy="22" r="5" fill="${hc}"/><circle cx="40" cy="17" r="6" fill="${hc}"/><circle cx="24" cy="29" r="4" fill="${hc}"/><circle cx="56" cy="29" r="4" fill="${hc}"/>`:hs==='curto'?`<path d="M24 30c0-12 7-17 16-17s16 5 16 17c-4-5-9-7-16-7s-12 2-16 7z" fill="${hc}"/>`:`<path d="M26 27c2-9 8-12 14-12s12 3 14 12c-5-3-9-4-14-4s-9 1-14 4z" fill="${hc}" opacity=".6"/>`;
+ return `<svg class="av" width="${s}" height="${s}" viewBox="0 0 80 80"><circle cx="40" cy="40" r="40" fill="#f3d9d9"/><path d="M14 80c0-14 11-22 26-22s26 8 26 22z" fill="#C4161C"/><path d="M33 58l7 7 7-7" stroke="#fff" stroke-width="3" fill="none"/><text x="40" y="77" font-size="9" font-weight="800" fill="#fff" text-anchor="middle" font-family="system-ui">${a.id==="a1"?10:a.id==="a2"?7:9}</text><rect x="34" y="46" width="12" height="12" rx="4" fill="${sk}"/><circle cx="40" cy="34" r="15" fill="${sk}"/>${hair}<circle cx="35" cy="35" r="1.8" fill="#222"/><circle cx="45" cy="35" r="1.8" fill="#222"/><path d="M35 42q5 4 10 0" stroke="#222" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`}
+function stadium(){return `<svg viewBox="0 0 260 90" fill="none" stroke="#fff" stroke-width="3"><path d="M5 88 Q130 -10 255 88"/><path d="M25 88 Q130 10 235 88"/>${[30,55,80,105,130,155,180,205,230].map(x=>`<path d="M${x} 88 L${x} ${88-Math.round(70*Math.sin(Math.PI*(x-5)/250))}"/>`).join('')}<path d="M0 88 H260"/></svg>`}
+function confetti(n,cls){const c=['#C4161C','#ffffff','#8a8d93','#8E0F14','#e2e2e5'];return `<div class="${cls}">${Array.from({length:n},(_,i)=>`<i style="left:${(i*37)%100}%;background:${c[i%5]};animation-delay:${(i%7)*.08}s;transform:rotate(${i*29}deg)"></i>`).join('')}</div>`}
+function cardNo(cid){return String(Object.keys(CARDS).indexOf(cid)+1).padStart(2,'0')}
+/* ---------- regras ---------- */
+function award(aid,cid){const a=A(aid);if(a.cards.some(c=>c.id===cid))return false;a.cards.push({id:cid,d:TODAY});(S.reveal[aid]=S.reveal[aid]||[]).push(cid);S.notifs.push({id:uid(),aid,aud:'atleta',text:'Novo card no seu álbum: '+CARDS[cid].t+'.',seen:false});return true}
+function toast(m){V.toast=m;render();clearTimeout(toast.t);toast.t=setTimeout(()=>{V.toast=null;render()},2800)}
+function log(who,t){S.audit.unshift({d:TODAY,who,t})}
+function allNodes(a){return a.trilha.reduce((r,p)=>r.concat(p.n),[])}
+function nextNode(a){return allNodes(a).find(n=>!a.done.includes(n.id))}
+function visEv(a){return S.events.filter(e=>e.kind==='treino'?e.partner===a.partner:e.kind==='macro'?e.cats.includes(a.cat):e.kind==='comp'?e.partners.includes(a.partner):e.kind==='conv'?(e.who.includes(a.id)&&e.rel):false).sort((x,y)=>x.d.localeCompare(y.d)||x.h.localeCompare(y.h))}
+function nextEv(a){return visEv(a).find(e=>e.d>=TODAY)}
+function consentOk(a){return a.consent.termo==='v1.1'&&!a.consent.pendUpd&&a.consent.sinais}
+function myAth(){const c=T(V.cid);return S.athletes.filter(a=>a.partner===c.partner)}
+function hasKey(key,cid){const [t,id]=key.split(':');return t==='a'?A(id).courses[cid]:S.extraCourses[id+':'+cid]}
+function grant(key,cid){const [t,id]=key.split(':');if(t==='a')A(id).courses[cid]={les:[]};else S.extraCourses[id+':'+cid]={les:[]}}
+function pendBuy(aid,cid){return S.reqs.find(r=>r.kind==='compra'&&r.aid===aid&&r.cid===cid&&r.status==='pend')}
+/* ---------- UI base ---------- */
+function render(){if(V.role==='atleta'&&!V.modal&&(S.reveal[V.aid]||[]).length)V.modal={k:'reveal',c:S.reveal[V.aid][0]};const y=(document.querySelector('.ph-body')||{}).scrollTop||0;const ym=window.scrollY;const key=[V.role,V.aid,V.cid,V.tab[V.role],V.page,V.form.pSel,V.form.dAth].join('|');const el=document.getElementById('app');el.className=key!==V._k?'anim':'';V._k=key;el.innerHTML=topBar()+'<div class="fict">Protótipo com dados fictícios · nomes inventados · sem dados reais</div>'+body()+modalHtml()+(V.burst?confetti(40,'burst'):'')+(V.toast?`<div class="toast">${esc(V.toast)}</div>`:'');const pb=document.querySelector('.ph-body');if(pb)pb.scrollTop=y;window.scrollTo(0,ym)}
+function topBar(){const R=[['atleta','Atleta'],['resp','Responsável'],['trn','Treinador / Dono'],['saci','SACI admin']];
+ let act='';
+ if(V.role==='atleta'||V.role==='resp')act=`<select data-chg="actor">${S.athletes.map(a=>`<option value="${a.id}" ${a.id===V.aid?'selected':''}>${V.role==='resp'?'Resp. de ':''}${a.name} (${a.cat}${a.id==='a1'?' · Seleção':''})</option>`).join('')}</select>`;
+ if(V.role==='trn')act=`<select data-chg="actor">${S.coaches.map(c=>`<option value="${c.id}" ${c.id===V.cid?'selected':''}>${c.name}${c.dono?' (dono)':''} · ${P(c.partner).name}</option>`).join('')}</select>`;
+ return `<div class="bar"><span class="brand">SACI</span><span class="mut sm">Ver como:</span><div class="seg">${R.map(r=>`<button class="${V.role===r[0]?'on':''}" data-act="role" data-v="${r[0]}">${r[1]}</button>`).join('')}</div>${act}<span class="sp"></span><button class="lk" data-act="about">Sobre / limitações</button><button class="lk" data-act="reset">Reiniciar demo</button></div>`}
+function body(){if(V.role==='atleta')return `<div class="stage">${phone(A(V.aid),'atleta')}</div>`;if(V.role==='resp')return `<div class="stage">${phone(A(V.aid),'resp')}</div>`;if(V.role==='trn')return webTrn();return webSaci()}
+const ACT={};
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el||el.disabled)return;const f=ACT[el.dataset.act];if(f)f(el.dataset,el)});
+document.addEventListener('input',e=>{const el=e.target;if(el.dataset.f)V.form[el.dataset.f]=el.type==='checkbox'?el.checked:el.value});
+document.addEventListener('change',e=>{const el=e.target;if(el.dataset.f){V.form[el.dataset.f]=el.type==='checkbox'?el.checked:el.value;if(el.dataset.r)render()}if(el.dataset.chg)ACT[el.dataset.chg](el.dataset,el)});
+ACT.role=d=>{V.role=d.v;V.modal=null;V.form={};render()};
+ACT.actor=(d,el)=>{if(V.role==='trn')V.cid=el.value;else V.aid=el.value;V.modal=null;V.form={};render()};
+ACT.reset=()=>{S=initState();S.reveal={a1:['CV1']};V.modal=null;V.form={};render();toast('Demo reiniciada')};
+ACT.tab=d=>{V.tab[d.r]=d.v;V.form={};render()};
+ACT.close=()=>{V.modal=null;render()};
+ACT.seen=d=>{const n=S.notifs.find(x=>x.id===d.id);if(n)n.seen=true;render()};
+/* ---------- celular (atleta / responsável) ---------- */
+function phone(a,mode){const tabs=[['inicio','home','Início'],['album','album','Álbum'],['trilha','trail','Trilha'],['cursos','book','Cursos'],['agenda','cal','Agenda']];if(mode==='resp')tabs.push(['aprov','shield','Aprovar']);
+ const t=V.tab[mode];const fn={inicio:vInicio,album:vAlbum,trilha:vTrilha,cursos:vCursos,agenda:vAgenda,aprov:vAprov}[t];
+ const pend=mode==='resp'?S.reqs.filter(r=>r.aid===a.id&&(r.kind==='compra'||r.kind==='conv')&&r.status==='pend').length+(a.consent.pendUpd?1:0):0;
+ return `<div class="phone ${isPlay(a)?'th-play':'th-sport'}"><div class="ph-top"><b>${mode==='resp'?'Colorado · Família':'Colorado'}</b><span>${mode==='resp'?'Acompanhando '+esc(a.name.split(' ')[0]):esc(a.name.split(' ')[0])}</span></div><div class="ph-body">${fn(a,mode)}</div><nav class="tabs">${tabs.map(x=>`<button class="${t===x[0]?'on':''}" data-act="tab" data-r="${mode}" data-v="${x[0]}">${ic(x[1],22)}${x[2]}${x[0]==='aprov'&&pend?'<span class="dot"></span>':''}</button>`).join('')}</nav></div>`}
+function ccHtml(cid,own,tag){const c=CARDS[cid],pg=PAGES.find(p=>p.id===c.p);return `<div class="cc ${own?'on':'off'} ${cid==='CV1'?'sel':''}"><div class="ct"><span>#${cardNo(cid)}</span><span>${pg.t}</span></div><div class="ce">${ic(own?pg.ico:'lock',own?26:18)}</div><b>${esc(c.t)}</b><small>${tag}</small></div>`}
+function cardTile(cid,a){const c=CARDS[cid],h=a.cards.find(x=>x.id===cid);
+ return `<button style="display:block;width:100%;padding:0" data-act="cardinfo" data-c="${cid}" data-a="${a.id}">${ccHtml(cid,h,h?fd(h.d):esc(c.h))}</button>`}
+function vInicio(a,mode){
+ const ns=S.notifs.filter(n=>n.aid===a.id&&n.aud===(mode==='resp'?'resp':'atleta')&&!n.seen);
+ const nn=nextNode(a),ev=nextEv(a);const last=a.cards.length?a.cards[a.cards.length-1]:null;
+ const nl=nn?(nn.k==='quiz'?QUIZ[nn.id].t:nn.t):null;
+ return `${ns.map(n=>`<div class="note">${ic('bell',16)}<span>${esc(n.text)}</span><button data-act="seen" data-id="${n.id}">Ok</button></div>`).join('')}
+ <div class="hero2 ${a.cards.some(c=>c.id==='CV1')?'sel':''}"><div class="stad">${stadium()}</div><div class="hrow">${avatar(a,74)}<div><div class="nm">${esc(a.name)}</div><div class="hsub">${esc(a.pos)} · ${a.cat} · ${a.mod}</div>${a.cards.some(c=>c.id==='CV1')?'<span class="selb">★ Seleção Colorada</span>':`<span class="selb" style="background:rgba(255,255,255,.18);color:#fff">${mode==='resp'?'Família colorada':'Vamo, Colorado!'}</span>`}</div></div></div>
+ <div class="chips"><span>Posição: ${esc(a.pos)}</span><span>Perna: ${esc(a.foot)}</span><span>${a.cat} · ${a.mod}</span><span>${esc(P(a.partner).name)}</span></div>
+ <div class="tiles">${[['ball',a.stats.treinos,'Treinos'],['cal',a.stats.eventos,'Eventos'],['star',a.stats.missoes,'Missões'],['album',a.cards.length,'Cards']].map(t=>`<div class="tile">${ic(t[0],16)}<b>${t[1]}</b><small>${t[2]}</small></div>`).join('')}</div>
+ <div class="card"><h4>Constância da semana</h4><div class="wk">${Array.from({length:a.week.goal},(_,i)=>`<i class="${i<a.week.done?'f':''}"></i>`).join('')}</div><div class="sub">${a.week.done} de ${a.week.goal}. Sem pressão: a semana nova começa segunda.</div></div>
+ <div class="card hl"><h4>Próxima missão</h4>${nn?`<div class="big">${esc(nl)}</div>${mode==='atleta'?`<p style="margin-top:8px"><button class="btn s" data-act="tab" data-r="atleta" data-v="trilha">Ir para a trilha</button></p>`:''}`:'<div class="big">Trilha completa! Novas missões chegam em breve.</div>'}</div>
+ <div class="card"><h4>Próximo evento</h4>${ev?`<div class="big">${esc(ev.t)}</div><div class="sub">${fd(ev.d)} · ${ev.h} · ${esc(ev.pl)}</div>`:'<div class="sub">Nenhum evento marcado.</div>'}</div>
+ <div class="card"><h4>Último card</h4>${last?`<div class="big">${esc(CARDS[last.id].t)}</div><div class="sub">${fd(last.d)}</div>`:'<div class="sub">Seu primeiro card vem logo!</div>'}</div>`}
+function vAlbum(a){const has=a.cards.some(c=>c.id==='CV1');const pgs=PAGES.filter(p=>p.id!=='col'||has);if(!pgs.some(p=>p.id===V.page))V.page='comp';
+ const ids=Object.keys(CARDS).filter(k=>CARDS[k].p===V.page&&(V.page!=='col'||a.cards.some(c=>c.id===k)));
+ const done=ids.filter(k=>a.cards.some(c=>c.id===k)).length;
+ return `<div class="ptabs">${pgs.map(p=>`<button class="${V.page===p.id?'on':''}" data-act="page" data-v="${p.id}">${p.t}</button>`).join('')}</div><div class="sub" style="margin:4px 0 4px">${done} de ${ids.length} nesta página · sem ranking, sem prazo</div><div class="prog"><i style="width:${ids.length?done/ids.length*100:0}%"></i></div><div class="grid">${ids.map(k=>cardTile(k,a)).join('')}</div>`}
+ACT.page=d=>{V.page=d.v;render()};
+ACT.cardinfo=d=>{V.modal={k:'card',c:d.c,a:d.a};render()};
+function vTrilha(a,mode){const cur=nextNode(a);
+ let k=0;return (mode==='resp'?'<div class="sub" style="margin:10px 0 0">Visão do responsável: acompanhe, sem responder pelo atleta.</div>':'')+a.trilha.map((ph,pi)=>`<div><div class="phz"><b>Fase ${pi+1}</b><span>${esc(ph.t.replace(/^Fase \d+ · /,''))}</span></div><div class="zig">${ph.n.map(n=>{const pos=[0,1,2,1][k++%4];
+  const done=a.done.includes(n.id),isCur=cur&&cur.id===n.id;
+  const pend=n.k==='des'&&S.reqs.some(r=>r.kind==='valida'&&r.aid===a.id&&r.nid===n.id&&r.status==='pend');
+  const st=done?'done':isCur?'cur':'fut';const lb=n.k==='quiz'?QUIZ[n.id].t:n.t;
+  const sb=done?'Concluída':pend?'Aguardando o treinador':n.k==='quiz'?'Quiz · 2 a 5 min':'Desafio com a bola · o treinador valida';
+  return `<div class="zn ${st} p${pos}"><button class="orb" ${st!=='cur'||mode==='resp'||pend?'disabled':''} data-act="node" data-id="${n.id}">${ic(done?'check':st==='fut'?'lock':n.k==='quiz'?'star':'ball',24)}</button><div class="lb"><b>${esc(lb)}</b><small>${sb}</small></div></div>`}).join('')}</div></div>`).join('')}
+ACT.node=d=>{const a=A(V.aid),n=allNodes(a).find(x=>x.id===d.id);if(n.k==='quiz'){V.modal={k:'quiz',qid:n.id,i:0,picked:null,ans:[]};render()}else{S.reqs.push({id:uid(),kind:'valida',aid:a.id,nid:n.id,card:n.card,t:n.t,status:'pend'});toast('Pedido enviado ao seu treinador')}};
+function quizM(){const m=V.modal,q=QUIZ[m.qid],qq=q.qs[m.i],ord=[0,1,2].map(k=>(k+m.i+1)%3);
+ return `<h3>${esc(q.t)}</h3><div class="sub">Pergunta ${m.i+1} de ${q.qs.length}</div><p style="margin:10px 0;font-weight:600">${esc(qq.q)}</p>${ord.map(k=>{let cl='';if(m.picked!=null){if(k===0)cl='ok';else if(k===m.picked)cl='no'}return `<button class="opt ${cl}" ${m.picked!=null?'disabled':''} data-act="qans" data-k="${k}">${esc(qq.o[k])}</button>`}).join('')}${m.picked!=null?`<p class="sub" style="margin:8px 0">${m.picked===0?'Isso! Acertou.':'Quase! A resposta era: '+esc(qq.o[0])+'.'}</p><button class="btn" data-act="qnext">${m.i+1<q.qs.length?'Próxima':'Concluir missão'}</button>`:''}`}
+ACT.qans=d=>{const m=V.modal;if(m.picked!=null)return;m.picked=+d.k;m.ans.push(+d.k===0);render()};
+ACT.qnext=()=>{const m=V.modal,q=QUIZ[m.qid],a=A(V.aid);if(m.i+1<q.qs.length){m.i++;m.picked=null;render();return}
+ if(!a.done.includes(m.qid)){a.done.push(m.qid);a.stats.missoes++;a.week.done=Math.min(a.week.goal,a.week.done+1)}
+ const got=[];if(award(a.id,'G6'))got.push('Primeira missão');if(m.ans.every(x=>x)&&award(a.id,'G5'))got.push('Quiz perfeito');V.modal=null;V.burst=true;setTimeout(()=>{V.burst=false;render()},1800);toast('Missão concluída!')};
+function vCursos(a,mode){const aud=mode==='resp'?'familia':'atleta';const key=mode==='resp'?'a:'+a.id:'a:'+a.id;
+ return `<div class="sub" style="margin:6px 0">${mode==='resp'?'Para a família':'Para você'}</div><div class="crs">${COURSES.filter(c=>c.aud===aud).map(c=>{const h=hasKey(key,c.id),pb=pendBuy(a.id,c.id);const tot=c.les.length,dn=h?h.les.length:0;
+  let btn;if(h&&dn>=tot&&tot)btn='<span class="tag g">Concluído</span>';else if(h)btn=`<button class="btn s" data-act="copen" data-c="${c.id}" data-m="${mode}">Continuar</button>`;else if(pb)btn='<span class="tag y">Aguardando o responsável</span>';else if(c.price&&mode==='atleta')btn=`<button class="btn s o" data-act="cbuy" data-c="${c.id}" data-m="${mode}">Pedir ao responsável</button>`;else btn=`<button class="btn s" data-act="cbuy" data-c="${c.id}" data-m="${mode}">${c.price?'Comprar':'Começar'}</button>`;
+  return `<div class="card" style="margin:0"><div class="row"><div><div class="big">${esc(c.t)}</div><div class="sub">${esc(c.d)}</div></div><span class="price">${brl(c.price)}</span></div>${h?`<div class="bar2"><i style="width:${tot?dn/tot*100:0}%"></i></div>`:''}<div style="margin-top:8px">${btn}</div></div>`}).join('')}</div>`}
+ACT.copen=d=>{const key=d.k||'a:'+V.aid;V.modal={k:'course',cid:d.c,key};render()};
+ACT.cbuy=d=>{const a=A(V.aid),c=COURSES.find(x=>x.id===d.c),key='a:'+a.id;
+ if(c.price&&d.m==='atleta'){S.reqs.push({id:uid(),kind:'compra',aid:a.id,cid:c.id,status:'pend'});S.notifs.push({id:uid(),aid:a.id,aud:'resp',text:a.name.split(' ')[0]+' quer o curso "'+c.t+'" ('+brl(c.price)+'). Aguarda sua aprovação.',seen:false});toast('Pedido enviado ao seu responsável')}
+ else{grant(key,c.id);V.modal={k:'course',cid:c.id,key};render()}};
+function courseM(){const m=V.modal,c=COURSES.find(x=>x.id===m.cid),h=hasKey(m.key,c.id)||{les:[]};
+ return `<h3>${esc(c.t)}</h3><div class="sub">${esc(c.d)}</div>${c.unlock?'<div class="panel">Ao concluir as aulas, o guia de sinais é liberado no seu painel.</div>':''}${c.les.map((l,i)=>`<div class="card" style="margin:8px 0"><div class="row" style="display:flex;justify-content:space-between;align-items:center"><span>${h.les.includes(i)?'✓ ':''}Aula ${i+1}: ${esc(l)}</span>${h.les.includes(i)?'':`<button class="btn s" data-act="clesson" data-i="${i}">Concluir aula</button>`}</div></div>`).join('')}<p style="margin-top:10px"><button class="btn g" data-act="close">Fechar</button></p>`}
+ACT.clesson=d=>{const m=V.modal,c=COURSES.find(x=>x.id===m.cid),h=hasKey(m.key,c.id);const i=+d.i;if(!h.les.includes(i))h.les.push(i);
+ if(h.les.length>=c.les.length){const [t,id]=m.key.split(':');if(t==='a'){const ok=c.aud==='atleta'&&award(id,'G4');toast('Curso concluído!'+(ok?' Novo card: Curso concluído':''))}else if(c.unlock){T(id).modulo=true;log(T(id).name,'Concluiu módulo: leitura de jogo básico');toast('Módulo concluído. O guia de sinais foi liberado.')}else toast('Curso concluído!')}else render()};
+function vAgenda(a,mode){const evs=visEv(a),kinds={treino:'Treino',macro:'Evento do Inter',comp:'Competição',conv:'Convocação'};
+ return `<div class="sub" style="margin:6px 0">Próximos compromissos</div>`+evs.map(e=>{const r=S.rsvp[e.id+a.id];const rs=e.kind==='treino'?'':(mode==='resp'||e.kind==='conv'?(r?`<span class="tag ${r==='vou'?'g':''}">${r==='vou'?'Vai':'Não vai'}</span>`:''):`<button class="btn s ${r==='vou'?'':'o'}" data-act="rsvp" data-e="${e.id}" data-v="vou">Vou</button> <button class="btn s ${r==='nao'?'':'o'}" data-act="rsvp" data-e="${e.id}" data-v="nao">Não vou</button>`);
+  const rr=mode==='resp'&&e.kind!=='treino'?`<button class="btn s o" data-act="rsvp" data-e="${e.id}" data-v="${r==='vou'?'nao':'vou'}">${r==='vou'?'Marcar não vai':'Confirmar presença'}</button>`:rs;
+  return `<div class="card"><div class="ev"><div class="dt"><b>${dd(e.d)}</b><small>${mm(e.d)}</small></div><div><div class="big">${esc(e.t)}</div><div class="sub">${e.h} · ${esc(e.pl)}</div><div style="margin:4px 0"><span class="tag ${e.kind==='conv'?'r':''}">${kinds[e.kind]}</span>${e.card?'<span class="tag y">Rende um card</span>':''}${e.closed&&S.rsvp[e.id+a.id]==='vou'?'<span class="tag g">Card entregue</span>':''}</div>${rr}</div></div></div>`}).join('')||'<div class="sub">Nada marcado.</div>'}
+ACT.rsvp=d=>{S.rsvp[d.e+V.aid]=d.v;render()};
+function vAprov(a){const mine=S.reqs.filter(r=>r.aid===a.id);
+ const pend=mine.filter(r=>r.status==='pend'&&(r.kind==='compra'||r.kind==='conv'));
+ const ns=S.notifs.filter(n=>n.aid===a.id&&n.aud==='resp'&&!n.seen);
+ return `${ns.map(n=>`<div class="note">${ic('bell',16)}<span>${esc(n.text)}</span><button data-act="seen" data-id="${n.id}">Ok</button></div>`).join('')}
+ <div class="card"><h4>Para aprovar</h4>${pend.length?pend.map(r=>r.kind==='compra'?`<div style="margin:8px 0"><div class="big">${esc(COURSES.find(c=>c.id===r.cid).t)}</div><div class="sub">${brl(COURSES.find(c=>c.id===r.cid).price)} · pedido de ${esc(a.name.split(' ')[0])}</div><p style="margin-top:6px"><button class="btn s" data-act="appr" data-id="${r.id}">Aprovar</button> <button class="btn s o" data-act="deny" data-id="${r.id}">Recusar</button></p></div>`:`<div style="margin:8px 0"><div class="big">Convocação: ${esc(r.title)}</div><div class="sub">Comunicado do Inter · ${fd(r.date)}. Ao liberar, o card aparece no álbum do atleta.</div><p style="margin-top:6px"><button class="btn s" data-act="rel" data-id="${r.id}">Liberar ao atleta</button></p></div>`).join(''):'<div class="sub">Nada pendente.</div>'}</div>
+ <div class="card"><h4>Consentimento</h4><div class="big">Termo ${a.consent.termo} · aceito em ${fd(a.consent.d)}</div>${a.consent.pendUpd?`<div class="panel w sm" style="margin-top:6px">Termo v1.2 aguarda seu aceite: inclui o registro de altura e a observação de maturação (podem ser dado de saúde) [Inferência — validar com jurídico]. <p style="margin-top:6px"><button class="btn s" data-act="accept">Aceitar v1.2</button></p></div>`:''}
+ <label class="ck"><input type="checkbox" ${a.consent.sinais?'checked':''} data-act="togcons"> Acompanhamento esportivo pelo clube</label></div>
+ <div class="card"><h4>Tempo de uso e avisos</h4><div class="fr"><div><label>Limite diário no app</label><select data-chg="limit"><option value="30" ${a.limit==30?'selected':''}>30 min</option><option value="60" ${a.limit==60?'selected':''}>60 min</option><option value="90" ${a.limit==90?'selected':''}>90 min</option></select></div></div><label class="ck"><input type="checkbox" checked> Lembrete de treino (sem cobrança de meta)</label><label class="ck"><input type="checkbox" checked> Aviso de novo card</label></div>
+ <div class="card"><h4>Dados do atleta</h4><p class="sub">Você pode pedir uma cópia dos dados registrados (inclui a altura) ou a exclusão da conta.</p>${mine.filter(r=>r.kind==='acesso'||r.kind==='exclusao').map(r=>`<div class="tag ${r.status==='pend'?'y':'g'}">${r.kind==='acesso'?'Cópia dos dados':'Exclusão'}: ${r.status==='pend'?'em análise':'atendida'}</div>`).join('')}<p style="margin-top:8px"><button class="btn s o" data-act="dreq" data-v="acesso">Pedir cópia dos dados</button> <button class="btn s o" data-act="dreq" data-v="exclusao">Excluir conta e dados</button></p></div>`}
+ACT.appr=d=>{const r=S.reqs.find(x=>x.id===d.id);r.status='ok';grant('a:'+r.aid,r.cid);S.notifs.push({id:uid(),aid:r.aid,aud:'atleta',text:'Seu responsável liberou o curso "'+COURSES.find(c=>c.id===r.cid).t+'".',seen:false});toast('Curso aprovado e liberado')};
+ACT.deny=d=>{const r=S.reqs.find(x=>x.id===d.id);r.status='no';S.notifs.push({id:uid(),aid:r.aid,aud:'atleta',text:'Este curso fica para outra hora. Que tal uma missão da trilha?',seen:false});toast('Pedido recusado')};
+ACT.rel=d=>{const r=S.reqs.find(x=>x.id===d.id);r.status='ok';award(r.aid,'CV1');if(!S.funil[r.aid])S.funil[r.aid]={status:'Convocado à Seleção',rev:'2027-04-30'};else S.funil[r.aid].status='Convocado à Seleção';const e=S.events.find(x=>x.id===r.eid);if(e)e.rel=true;log(A(r.aid).resp,'Liberou convocação ao atleta ('+A(r.aid).name+')');toast('Card liberado no álbum do atleta')};
+ACT.accept=()=>{const a=A(V.aid);a.consent.termo='v1.1';a.consent.pendUpd=false;a.consent.d=TODAY;log(a.resp,'Aceitou termo atualizado ('+a.name+')');toast('Termo aceito')};
+ACT.togcons=()=>{const a=A(V.aid);a.consent.sinais=!a.consent.sinais;log(a.resp,'Alterou acompanhamento esportivo ('+a.name+'): '+(a.consent.sinais?'ativo':'desativado'));render()};
+ACT.limit=(d,el)=>{A(V.aid).limit=+el.value;toast('Limite de uso atualizado')};
+ACT.dreq=d=>{const a=A(V.aid);if(S.reqs.some(r=>r.aid===a.id&&r.kind===d.v&&r.status==='pend')){toast('Pedido já em análise');return}S.reqs.push({id:uid(),kind:d.v,aid:a.id,status:'pend'});log(a.resp,(d.v==='acesso'?'Pediu cópia dos dados':'Pediu exclusão de dados')+' ('+a.name+')');toast('Pedido enviado ao SACI')};
+/* ---------- modal ---------- */
+function modalHtml(){const m=V.modal;if(!m)return'';let h='';
+ if(m.k==='quiz')h=quizM();else if(m.k==='course')h=courseM();
+ else if(m.k==='card'){const c=CARDS[m.c],a=A(m.a),own=a.cards.find(x=>x.id===m.c);h=`<div class="flip" style="margin-bottom:10px">${ccHtml(m.c,own,own?fd(own.d):'')}</div><h3>${esc(c.t)}</h3><p class="sub">Página: ${PAGES.find(p=>p.id===c.p).t}</p><p style="margin:10px 0">${own?(m.c==='CV1'?'O Inter convocou você para a Seleção. Parabéns!':'Conquistado em '+fd(own.d)+'.'):'Como conseguir: '+esc(c.h)+'.'}</p><button class="btn g" data-act="close">Fechar</button>`}
+ else if(m.k==='alt'){h=`<h3>Registrar altura</h3><p class="sub">${esc(A(m.aid).name)} · visível só para você, SACI e formação. Não aparece para o atleta.</p><div class="fr"><div><label>Altura (cm)</label><input type="number" step="0.1" data-f="altCm" placeholder="ex.: 152"></div></div><p class="mut">Data: ${fd(TODAY)} · medido por ${esc(T(V.cid).name)}</p><p style="margin-top:10px"><button class="btn" data-act="altsave" data-a="${m.aid}">Salvar</button> <button class="btn g" data-act="close">Cancelar</button></p>`}
+ else if(m.k==='about')h=aboutM();
+ else if(m.k==='reveal'){const c=CARDS[m.c];h=`<div class="reveal">${confetti(30,'conf')}<div class="sub">${m.c==='CV1'?'Comunicado do Inter':'Card novo!'}</div><div class="flip">${ccHtml(m.c,true,fd(TODAY))}</div><h3>${m.c==='CV1'?'Você foi convocado!':esc(c.t)}</h3><p class="sub" style="margin:4px 0 14px">${m.c==='CV1'?'Agora você faz parte da Seleção Colorada.':'Guardado na página '+PAGES.find(p=>p.id===c.p).t+' do seu álbum.'}</p><button class="btn" data-act="revok">${(S.reveal[V.aid]||[]).length>1?'Próximo card':'Guardar no álbum'}</button></div>`}
+ return `<div class="modal"><div>${h}</div></div>`}
+document.addEventListener('click',e=>{if(e.target.classList.contains('modal')&&V.modal&&V.modal.k!=='quiz'){V.modal=null;render()}});
+ACT.revok=()=>{const q=S.reveal[V.aid]||[];q.shift();const n=S.notifs.find(x=>x.aid===V.aid&&x.aud==='atleta'&&!x.seen&&/card/i.test(x.text));if(n)n.seen=true;V.modal=null;render()};
+ACT.about=()=>{V.modal={k:'about'};render()};
+function aboutM(){return `<h3>Sobre este protótipo</h3><p class="sub">Modelo para a startup. Dados fictícios, estado só na memória (recarregar reinicia).</p>
+ <h3 style="font-size:14px">Limitações e pontos abertos</h3>
+ <ul style="padding-left:18px" class="sm"><li>Tela do responsável: forma final (login próprio) a definir no desenvolvimento. [Inferência]</li><li>Altura e maturação podem ser dado de saúde: validar termo e acesso com jurídico. [Inferência]</li><li>Indicação sem evidência: mais simples para o treinador, mas a confirmação pelo SACI no evento passa a ser o único filtro. Critério mínimo (2 de jogo + 1 de aprendizagem/atitude) a calibrar. [Inferência]</li><li>Elementos do Inter: só cores, listras e estádio genérico; escudo e mascote oficiais dependem de autorização do clube.</li><li>Aplicação do ECA Digital (Lei 15.211/2025) a esta web app: revisão jurídica. [Verificado — texto do PIDA/BC-V3; aplicação concreta: Inferência]</li><li>Quem valida os desafios de fundamentos no Inter e preços dos cursos: em aberto. [Especulação]</li><li>Sem login, sem push, sem pagamento real; notificações simuladas.</li><li>Formação (observador da Seleção) não tem tela própria aqui: usa a visão do funil do SACI.</li></ul><p style="margin-top:10px"><button class="btn g" data-act="close">Fechar</button></p>`}
+/* ---------- treinador / dono ---------- */
+function webTrn(){const c=T(V.cid),t=V.tab.trn;const tabs=[['turma','Turma'],['pres','Presença'],['comp','Competições'],['des','Desafios'],['dest','Indicar'],['crs','Cursos']];if(c.dono)tabs.push(['proj','Meu projeto']);
+ const fn={turma:tTurma,pres:tPres,comp:tComp,des:tDes,dest:tDest,crs:tCrs,proj:tProj}[t];
+ return `<div class="web"><div class="side">${tabs.map(x=>`<button class="${t===x[0]?'on':''}" data-act="tab" data-r="trn" data-v="${x[0]}">${x[1]}</button>`).join('')}</div><div class="main"><div class="mut" style="margin-bottom:6px">${esc(c.name)} · ${esc(P(c.partner).name)}${c.dono?' · dono do projeto':''}</div>${fn(c)}</div></div>`}
+function tTurma(c){const as=myAth();return `<h2>Turma</h2><div class="tw"><table><tr><th>Atleta</th><th>Cat.</th><th>Posição / perna</th><th>Treinos</th><th>Consent.</th><th>Altura (a sua)</th></tr>${as.map(a=>{const h=a.altura.filter(x=>x.by===c.name).slice(-1)[0];return `<tr><td>${avatar(a,30)} ${esc(a.name)}</td><td>${a.cat}</td><td>${esc(a.pos)} · ${esc(a.foot)}</td><td>${a.stats.treinos}</td><td>${consentOk(a)||(a.consent.termo==='v1.1'&&!a.consent.pendUpd)?'<span class="tag g">ok</span>':'<span class="tag y">pendência</span>'}</td><td>${h?h.cm+' cm <span class="mut sm">('+fd(h.d)+')</span>':'—'} <button class="btn s o" data-act="altopen" data-a="${a.id}">Registrar</button></td></tr>`}).join('')}</table></div><div class="panel">Altura é contexto: não aparece para o atleta e você vê só as que registrou. A maturação tardia agora entra como opção dentro de <b>Indicar</b>.</div>`}
+ACT.altopen=d=>{V.modal={k:'alt',aid:d.a};V.form={};render()};
+ACT.altsave=d=>{const v=parseFloat(V.form.altCm);if(!v||v<60||v>230){toast('Informe uma altura válida em cm');return}const a=A(d.a),c=T(V.cid);a.altura.push({d:TODAY,cm:v,by:c.name});log(c.name,'Registrou altura ('+a.name+')');V.modal=null;V.form={};toast('Altura registrada')};
+ACT.mat=(d,el)=>{const a=A(d.a);a.mat=el.value;log(T(V.cid).name,'Observação de maturação atualizada ('+a.name+')');toast('Observação salva')};
+function nextTreino(c){return S.events.filter(e=>e.kind==='treino'&&e.partner===c.partner&&e.d>=TODAY).sort((x,y)=>x.d.localeCompare(y.d))[0]}
+function tPres(c){const e=nextTreino(c),as=myAth();if(!e)return '<h2>Presença</h2><p class="mut">Sem treino marcado.</p>';const done=S.pres[e.id];
+ return `<h2>Presença</h2><p><b>${esc(e.t)}</b> · ${fd(e.d)} ${e.h}</p>${done?'<div class="panel">Presença já lançada neste treino.</div>':`${as.map(a=>`<label class="ck"><input type="checkbox" data-f="p_${a.id}" ${V.form['p_'+a.id]===false?'':'checked'}> ${esc(a.name)} <span class="mut sm">(${a.cat})</span></label>`).join('')}<p style="margin-top:10px"><button class="btn" data-act="plan" data-e="${e.id}">Lançar presença</button></p>`}`}
+ACT.plan=d=>{const as=myAth();let n=0;as.forEach(a=>{if(V.form['p_'+a.id]===false)return;a.stats.treinos++;a.week.done=Math.min(a.week.goal,a.week.done+1);n++;award(a.id,'G1');if(a.stats.treinos>=10)award(a.id,'G2')});S.pres[d.e]=true;log(T(V.cid).name,'Lançou presença ('+n+' atletas)');V.form={};toast('Presença lançada: '+n+' atletas')};
+function tComp(c){const as=myAth();return `<h2>Competições</h2><p class="mut">Registre uma competição e os atletas que jogaram: o card entra no álbum.</p><div class="fr"><div><label>Competição</label><select data-f="cmp">${COMP_OPTS.map(k=>`<option value="${k}" ${V.form.cmp===k?'selected':''}>${CARDS[k].t}</option>`).join('')}</select></div></div>${as.map(a=>`<label class="ck"><input type="checkbox" data-f="c_${a.id}" ${V.form['c_'+a.id]?'checked':''}> ${esc(a.name)}</label>`).join('')}<p style="margin-top:10px"><button class="btn" data-act="cmpsave">Registrar</button></p>`}
+ACT.cmpsave=()=>{const k=V.form.cmp||COMP_OPTS[0];let n=0;myAth().forEach(a=>{if(V.form['c_'+a.id]){a.stats.eventos++;award(a.id,k);n++}});if(!n){toast('Marque ao menos um atleta');return}log(T(V.cid).name,'Registrou competição: '+CARDS[k].t+' ('+n+')');V.form={};toast('Competição registrada: '+n+' atleta(s) com card novo')};
+function tDes(c){const as=myAth().map(a=>a.id);const rs=S.reqs.filter(r=>r.kind==='valida'&&as.includes(r.aid)&&r.status==='pend');
+ return `<h2>Desafios para validar</h2>${rs.length?rs.map(r=>`<div class="panel"><b>${esc(A(r.aid).name)}</b> · ${esc(r.t)}<p style="margin-top:6px"><button class="btn s" data-act="valid" data-id="${r.id}" data-v="1">Feito</button> <button class="btn s o" data-act="valid" data-id="${r.id}" data-v="0">Ainda não</button></p></div>`).join(''):'<p class="mut">Nenhum desafio aguardando.</p>'}<p class="mut">Binário: feito ou não feito. Sem nota.</p>`}
+ACT.valid=d=>{const r=S.reqs.find(x=>x.id===d.id),a=A(r.aid);r.status='ok';if(d.v==='1'){if(!a.done.includes(r.nid))a.done.push(r.nid);award(a.id,r.card);a.stats.missoes++;log(T(V.cid).name,'Validou desafio ('+a.name+')');toast('Desafio validado: card entregue')}else{S.notifs.push({id:uid(),aid:a.id,aud:'atleta',text:'Quase lá! Continue treinando esse desafio e peça de novo quando quiser.',seen:false});toast('Registrado: o atleta pode tentar de novo')}};
+function tDest(c){
+ if(!c.modulo)return `<h2>Indicar atleta</h2><div class="panel w">Este recurso é liberado depois do módulo <b>Leitura de jogo: básico</b> (gratuito).<p style="margin-top:8px"><button class="btn" data-act="tab" data-r="trn" data-v="crs">Ir para Cursos</button></p></div>`;
+ const as=myAth();if(V.form.sent)return `<h2>Indicar atleta</h2><div class="panel">Indicação enviada ao SACI. Você não acompanha o status depois do envio: é assim por desenho.</div><button class="btn" data-act="newdest">Nova indicação</button>`;
+ const sel=V.form.dAth;
+ if(!sel)return `<h2>Indicar atleta</h2><p class="mut">Disponível para Sub-11 e Sub-13. Escolha o atleta:</p><div class="tw"><table>${as.map(a=>{const el=a.cat==='Sub-11'||a.cat==='Sub-13';return `<tr><td>${avatar(a,30)} ${esc(a.name)}</td><td>${a.cat}</td><td><button class="btn s" ${el?'':'disabled'} data-act="dpick" data-a="${a.id}">Indicar</button>${el?'':' <span class="mut sm">só Sub-11 e Sub-13</span>'}</td></tr>`}).join('')}</table></div>`;
+ const a=A(sel);if(!a.consent.sinais||a.consent.pendUpd)return `<h2>Indicar atleta</h2><div class="panel w">Há pendência de consentimento para ${esc(a.name)}. Fale com a família antes de registrar.</div><button class="btn g" data-act="newdest">Voltar</button>`;
+ const nsel=SIGNALS.filter(s=>V.form['s_'+s.id]).length;return `<h2>Indicar: ${esc(a.name)} <span class="tag">${a.cat}</span></h2><p class="mut">Toque no que você viu. Sem nota, sem texto: o SACI confirma no próximo evento.</p>${['Jogo','Aprendizagem','Atitude'].map(g=>`<h3>${g}</h3><div>${SIGNALS.filter(s=>s.g===g).map(s=>`<button class="chip ${V.form['s_'+s.id]?'on':''}" data-act="sigt" data-k="s_${s.id}">${esc(s.t)}</button>`).join('')}</div>`).join('')}<h3>Contexto (opcional)</h3><button class="chip ctx ${V.form.mat?'on':''}" data-act="sigt" data-k="mat">Parece amadurecer mais tarde que os colegas</button><p style="margin-top:14px"><button class="btn" data-act="dsend">Indicar ao SACI${nsel?`<span class="cnt" style="background:#fff;color:var(--red)">${nsel}</span>`:''}</button> <button class="btn g" data-act="newdest">Cancelar</button></p>`}
+ACT.sigt=d=>{V.form[d.k]=!V.form[d.k];render()};
+ACT.dpick=d=>{V.form={dAth:d.a};render()};ACT.newdest=()=>{V.form={};render()};
+ACT.dsend=()=>{const a=A(V.form.dAth),c=T(V.cid),obs={};SIGNALS.forEach(s=>{if(V.form['s_'+s.id])obs[s.id]={ev:(V.form['e_'+s.id]||'').trim()}});const ks=Object.keys(obs);
+ if(!ks.length){toast('Toque em ao menos um item');return}if(V.form.mat)a.mat='tardia';
+ S.signals.push({id:uid(),aid:a.id,tr:c.id,d:TODAY,obs,conf:{}});if(!S.funil[a.id])S.funil[a.id]={status:'Sinalizado',rev:'2027-05-05'};log(c.name,'Indicou atleta ('+a.name+')');V.form={sent:1};render()};
+function tCrs(c){const key='c:'+c.id;return `<h2>Cursos para treinadores</h2><div class="crs">${COURSES.filter(x=>x.aud==='treinador').map(x=>{const h=hasKey(key,x.id),dn=h?h.les.length:0;const btn=h?(dn>=x.les.length?'<span class="tag g">Concluído</span>':`<button class="btn s" data-act="copen" data-c="${x.id}" data-k="${key}">Continuar</button>`):`<button class="btn s" data-act="ctbuy" data-c="${x.id}">${x.price?'Adquirir ('+brl(x.price)+')':'Começar'}</button>`;return `<div class="panel"><div style="display:flex;justify-content:space-between;gap:8px"><div><b>${esc(x.t)}</b><div class="mut">${esc(x.d)}</div></div><span class="price" style="color:var(--red);font-weight:700">${brl(x.price)}</span></div><div style="margin-top:8px">${btn}</div></div>`}).join('')}</div><p class="mut">Compra simulada: pagamento real fica para a startup.</p>`}
+ACT.ctbuy=d=>{const key='c:'+V.cid;grant(key,d.c);V.modal={k:'course',cid:d.c,key};render()};
+function tProj(c){const p=P(c.partner),as=S.athletes.filter(a=>a.partner===p.id),pend=as.filter(a=>!(a.consent.termo==='v1.1'&&!a.consent.pendUpd)).length;
+ const n=S.signals.filter(s=>as.some(a=>a.id===s.aid)).length;
+ return `<h2>Meu projeto: ${esc(p.name)}</h2><div class="kpis"><div class="kpi"><b>${as.length}</b><small>Atletas</small></div><div class="kpi"><b>${S.coaches.filter(x=>x.partner===p.id).length}</b><small>Treinadores</small></div><div class="kpi"><b>${pend}</b><small>Pendências de consentimento</small></div><div class="kpi"><b>${n}</b><small>Registros enviados ao SACI (só contagem)</small></div></div><h3>Treinadores</h3><table>${S.coaches.filter(x=>x.partner===p.id).map(x=>`<tr><td>${esc(x.name)}</td><td>${x.modulo?'<span class="tag g">Leitura de jogo concluída</span>':'<span class="tag y">Módulo pendente</span>'}</td></tr>`).join('')}</table><h3>Próximos eventos</h3>${S.events.filter(e=>e.d>=TODAY&&(e.partner===p.id||(e.partners||[]).includes(p.id)||e.kind==='macro')).map(e=>`<div>${fd(e.d)} · ${esc(e.t)}</div>`).join('')}<div class="panel">O dono vê contagens e pendências, nunca o status individual do funil.</div>`}
+/* ---------- SACI ---------- */
+function webSaci(){const t=V.tab.saci,tabs=[['painel','Painel'],['parc','Parceiros'],['atl','Atletas'],['ev','Eventos'],['funil','Funil'],['conv','Convocatórias']];
+ const fn={painel:sPainel,parc:sParc,atl:sAtl,ev:sEv,funil:sFunil,conv:sConv}[t];
+ return `<div class="web"><div class="side">${tabs.map(x=>`<button class="${t===x[0]?'on':''}" data-act="tab" data-r="saci" data-v="${x[0]}">${x[1]}</button>`).join('')}</div><div class="main">${fn()}</div></div>`}
+function sPainel(){const fun=Object.keys(S.funil);const rq=S.reqs.filter(r=>(r.kind==='acesso'||r.kind==='exclusao')&&r.status==='pend');const unc=S.signals.filter(s=>Object.keys(s.obs).some(k=>!s.conf[k]));
+ const pc=S.athletes.filter(a=>!(a.consent.termo==='v1.1'&&!a.consent.pendUpd)).length;
+ return `<h2>Painel</h2><div class="kpis"><div class="kpi"><b>${S.athletes.length}</b><small>Atletas ativos</small></div><div class="kpi"><b>${S.partners.length}</b><small>Parceiros</small></div><div class="kpi"><b>${fun.length}</b><small>No funil</small></div><div class="kpi"><b>${fun.filter(k=>S.funil[k].status==='Convocado à Seleção').length}</b><small>Convocados</small></div><div class="kpi"><b>${pc}</b><small>Pendências de consentimento</small></div><div class="kpi"><b>${S.counts.archived}</b><small>Arquivados (só contagem)</small></div></div>
+ <h3>Pendências</h3>${rq.map(r=>`<div class="panel">${r.kind==='acesso'?'Cópia dos dados':'Exclusão de dados'} · ${esc(A(r.aid).name)} (pedido do responsável) <button class="btn s" data-act="atend" data-id="${r.id}">Marcar como atendida</button></div>`).join('')}${unc.length?`<div class="panel">${unc.length} sinalização(ões) aguardando confirmação no próximo evento. <button class="btn s o" data-act="tab" data-r="saci" data-v="funil">Abrir funil</button></div>`:''}${S.reqs.filter(r=>r.kind==='conv'&&r.status==='pend').map(r=>`<div class="panel">Convocação de ${esc(A(r.aid).name)} aguardando liberação do responsável.</div>`).join('')}${!rq.length&&!unc.length?'<p class="mut">Sem pendências.</p>':''}
+ <h3>Próximas oportunidades com parceiros</h3><table>${S.partners.slice().sort((x,y)=>x.proxD.localeCompare(y.proxD)).map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.prox)}</td><td>${fd(p.proxD)}</td></tr>`).join('')}</table>
+ <h3>Auditoria recente</h3>${S.audit.slice(0,6).map(x=>`<div class="mut">${fd(x.d)} · ${esc(x.who)}: ${esc(x.t)}</div>`).join('')}`}
+ACT.atend=d=>{const r=S.reqs.find(x=>x.id===d.id);r.status='ok';S.notifs.push({id:uid(),aid:r.aid,aud:'resp',text:(r.kind==='acesso'?'Sua cópia dos dados está pronta (simulado).':'Seu pedido de exclusão foi atendido (simulado).'),seen:false});log('SACI','Atendeu pedido do responsável ('+A(r.aid).name+')');toast('Pedido atendido')};
+function sParc(){const sel=V.form.pSel&&P(V.form.pSel);if(!sel)return `<h2>Parceiros</h2><div class="tw"><table><tr><th>Parceiro</th><th>Cidade</th><th>Modalidade</th><th>Faixa</th><th>Último contato</th><th></th></tr>${S.partners.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.city)}</td><td>${p.mod}</td><td>${p.faixa}</td><td>${fd(p.ult)}</td><td><button class="btn s o" data-act="psel" data-id="${p.id}">Abrir</button></td></tr>`).join('')}</table></div>`;
+ const p=sel;return `<button class="btn g s" data-act="psel" data-id="">← Voltar</button><h2 style="margin-top:8px">${esc(p.name)}</h2><div class="fr"><div><label>Cidade / região</label>${esc(p.city)} / ${esc(p.reg)}</div><div><label>Modalidade</label>${p.mod}</div><div><label>Faixa etária</label>${p.faixa}</div><div><label>Atletas (porte)</label>${p.porte}</div><div><label>Estrutura</label>${esc(p.estr)}</div><div><label>Perfil</label>${esc(p.perfil)}</div><div><label>Forma de relação</label>${esc(p.forma)}</div><div><label>Contato</label>${esc(p.contato)}</div></div><div class="panel"><b>Comportamento:</b> ${esc(p.comp)}<br><b>Capacidade:</b> ${esc(p.cap)}</div>
+ <h3>Treinadores e atletas</h3><div>${S.coaches.filter(c=>c.partner===p.id).map(c=>esc(c.name)).join(', ')} · ${S.athletes.filter(a=>a.partner===p.id).map(a=>esc(a.name)+' ('+a.cat+')').join(', ')}</div>
+ <h3>Próxima oportunidade</h3><div class="fr"><div><input data-f="pProx" value="${esc(V.form.pProx!=null?V.form.pProx:p.prox)}"></div><div><input type="date" data-f="pProxD" value="${V.form.pProxD||p.proxD}"></div></div><button class="btn s" data-act="psaveprox" data-id="${p.id}">Salvar</button>
+ <h3>Histórico</h3>${p.hist.map(h=>`<div class="mut">${fd(h.d)} · <b>${h.tipo}</b>: ${esc(h.n)}</div>`).join('')}<div class="fr"><div><select data-f="hTipo"><option>Visita</option><option>Contato</option><option>Evento</option></select></div><div><input data-f="hNota" placeholder="Anotação"></div></div><button class="btn s" data-act="hadd" data-id="${p.id}">Adicionar registro</button>`}
+ACT.psel=d=>{V.form=d.id?{pSel:d.id}:{};render()};
+ACT.psaveprox=d=>{const p=P(d.id);if(V.form.pProx!=null)p.prox=V.form.pProx;if(V.form.pProxD)p.proxD=V.form.pProxD;log('SACI','Atualizou próxima oportunidade ('+p.name+')');toast('Salvo')};
+ACT.hadd=d=>{const p=P(d.id);if(!(V.form.hNota||'').trim()){toast('Escreva a anotação');return}p.hist.unshift({d:TODAY,tipo:V.form.hTipo||'Visita',n:V.form.hNota.trim()});p.ult=TODAY;V.form.hNota='';log('SACI','Registro em '+p.name);toast('Registro adicionado')};
+function sAtl(){return `<h2>Atletas ativos</h2><div class="tw"><table><tr><th>Atleta</th><th>Parceiro</th><th>Cat.</th><th>Mod.</th><th>Treinos</th><th>Altura (último)</th><th>Maturação</th><th>Consent.</th></tr>${S.athletes.map(a=>{const h=a.altura.slice(-1)[0];return `<tr><td>${esc(a.name)}</td><td>${esc(P(a.partner).name)}</td><td>${a.cat}</td><td>${a.mod}</td><td>${a.stats.treinos}</td><td>${h?h.cm+' cm ('+fd(h.d)+')':'—'}</td><td>${MATUR.find(m=>m.v===a.mat).t}</td><td>${a.consent.pendUpd?'<span class="tag y">termo v1.2 pendente</span>':'<span class="tag g">ok</span>'}</td></tr>`}).join('')}</table></div>`}
+function sEv(){return `<h2>Eventos</h2>${S.events.filter(e=>e.kind==='macro'||e.kind==='comp').sort((x,y)=>x.d.localeCompare(y.d)).map(e=>{const vou=S.athletes.filter(a=>S.rsvp[e.id+a.id]==='vou');return `<div class="panel"><b>${esc(e.t)}</b> · ${fd(e.d)} ${e.h} · ${esc(e.pl)} <span class="tag">${e.kind==='macro'?'Macro '+e.cats.join(', '):'Competição'}</span>${e.card?'<span class="tag y">Card: '+CARDS[e.card].t+'</span>':''}<div class="mut">Confirmados: ${vou.length?vou.map(a=>esc(a.name)).join(', '):'ninguém ainda'}</div>${e.card&&!e.closed?`<p style="margin-top:6px"><button class="btn s" data-act="close_ev" data-id="${e.id}">Encerrar e entregar card aos confirmados</button></p>`:''}${e.closed?'<div class="tag g">Encerrado</div>':''}</div>`}).join('')}
+ <h3>Novo evento macro</h3><div class="fr"><div><label>Título</label><input data-f="evT" value="${esc(V.form.evT||'')}"></div><div><label>Data</label><input type="date" data-f="evD" value="${V.form.evD||''}"></div><div><label>Hora</label><input data-f="evH" placeholder="14:00" value="${esc(V.form.evH||'')}"></div><div><label>Local</label><input data-f="evP" value="${esc(V.form.evP||'')}"></div></div><div>${CATS.map(c=>`<label class="ck" style="display:inline-flex;margin-right:10px"><input type="checkbox" data-f="evC_${c}" ${V.form['evC_'+c]?'checked':''}> ${c}</label>`).join('')}</div><div class="fr"><div><label>Card do evento (opcional)</label><select data-f="evK"><option value="">Nenhum</option>${Object.keys(CARDS).filter(k=>CARDS[k].p==='comp'||CARDS[k].p==='marc').map(k=>`<option value="${k}" ${V.form.evK===k?'selected':''}>${CARDS[k].t}</option>`).join('')}</select></div></div><button class="btn" data-act="evnew">Publicar na agenda</button>`}
+ACT.evnew=()=>{const f=V.form,cats=CATS.filter(c=>f['evC_'+c]);if(!(f.evT||'').trim()||!f.evD||!cats.length){toast('Informe título, data e ao menos uma categoria');return}S.events.push({id:uid(),kind:'macro',t:f.evT.trim(),d:f.evD,h:f.evH||'09:00',pl:f.evP||'A definir',cats,card:f.evK||null,closed:false});log('SACI','Criou evento macro: '+f.evT.trim());V.form={};toast('Evento publicado: aparece na agenda dos atletas')};
+ACT.close_ev=d=>{const e=S.events.find(x=>x.id===d.id);let n=0;S.athletes.forEach(a=>{if(S.rsvp[e.id+a.id]==='vou'){a.stats.eventos++;if(award(a.id,e.card))n++}});e.closed=true;log('SACI','Encerrou evento: '+e.t+' ('+n+' cards)');toast(n+' card(s) entregue(s)')};
+function crit(s){const ks=Object.keys(s.obs).filter(k=>s.conf[k]);const j=ks.filter(k=>k[0]==='J').length,at=ks.filter(k=>k[0]!=='J').length;return {j,at,ok:j>=2&&at>=1}}
+function sFunil(){const ids=Object.keys(S.funil);if(!ids.length)return '<h2>Funil</h2><p class="mut">Vazio.</p>';
+ return `<h2>Funil de atletas de interesse</h2><div class="panel">Visível só para SACI e formação. O treinador só registra; o atleta e a família não veem o status.</div>`+ids.map(id=>{const a=A(id),f=S.funil[id],sg=S.signals.filter(s=>s.aid===id);
+  return `<div class="panel"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><b>${esc(a.name)}</b> · ${a.cat} · ${esc(P(a.partner).name)}${a.mat==='tardia'?' <span class="tag r">Maturação tardia indicada: ler o físico com cautela</span>':a.mat==='obs'?' <span class="tag y">Maturação a observar</span>':''}</div><div><select data-chg="fstat" data-a="${id}">${FUNIL.map(s=>`<option ${f.status===s?'selected':''}>${s}</option>`).join('')}</select></div></div>
+  ${sg.map(s=>{const c=crit(s);return `<div style="margin-top:8px"><div class="mut">Indicação de ${fd(s.d)} por ${esc(T(s.tr).name)} · confirmados: ${c.j} de jogo, ${c.at} de aprend./atitude <span class="tag ${c.ok?'g':''}">${c.ok?'critério mínimo atingido [Inferência]':'em formação'}</span></div>${Object.keys(s.obs).map(k=>`<div class="sig"><div class="ev2"><b>${k}</b> ${esc(SIGNALS.find(x=>x.id===k).t)}</div>${s.conf[k]?`<span class="tag g">Confirmado ${fd(s.conf[k])}</span>`:`<button class="btn s" data-act="conf" data-s="${s.id}" data-k="${k}">Confirmar no evento</button>`}</div>`).join('')}</div>`}).join('')}
+  <p style="margin-top:8px"><button class="btn s o" data-act="arch" data-a="${id}">Arquivar e apagar dados individuais</button></p></div>`}).join('')}
+ACT.fstat=(d,el)=>{S.funil[d.a].status=el.value;log('SACI','Funil: '+A(d.a).name+' → '+el.value);toast('Status atualizado')};
+ACT.conf=d=>{const s=S.signals.find(x=>x.id===d.s);s.conf[d.k]=TODAY;log('SACI','Confirmou sinal '+d.k+' ('+A(s.aid).name+')');render()};
+ACT.arch=d=>{const a=A(d.a);S.signals=S.signals.filter(s=>s.aid!==d.a);delete S.funil[d.a];S.counts.archived++;log('SACI','Arquivou e apagou dados individuais do funil ('+a.name+')');toast('Arquivado: dados individuais apagados, contagem mantida')};
+function sConv(){const cs=S.reqs.filter(r=>r.kind==='conv');return `<h2>Convocatórias</h2><p class="mut">Fluxo: SACI emite → responsável é avisado → responsável libera → card aparece no álbum do atleta.</p>${cs.map(r=>`<div class="panel">${esc(A(r.aid).name)} · ${esc(r.title)} · ${fd(r.date)} <span class="tag ${r.status==='ok'?'g':'y'}">${r.status==='ok'?'Liberada':'Aguardando responsável'}</span></div>`).join('')||''}
+ <div class="panel"><b>Já emitida:</b> Gabriel Souza · Rodada Colorada Sub-13 · 05/12/2026 <span class="tag g">Liberada</span></div>
+ <h3>Nova convocatória</h3><div class="fr"><div><label>Atleta</label><select data-f="cvA">${S.athletes.map(a=>`<option value="${a.id}" ${V.form.cvA===a.id?'selected':''}>${esc(a.name)} (${a.cat})</option>`).join('')}</select></div><div><label>Título</label><input data-f="cvT" value="${esc(V.form.cvT||'')}" placeholder="Rodada Colorada Sub-11"></div><div><label>Data</label><input type="date" data-f="cvD" value="${V.form.cvD||''}"></div></div><button class="btn" data-act="cvnew">Emitir convocatória</button>`}
+ACT.cvnew=()=>{const f=V.form,aid=f.cvA||S.athletes[0].id,a=A(aid);if(!(f.cvT||'').trim()||!f.cvD){toast('Informe título e data');return}
+ const eid=uid();S.events.push({id:eid,kind:'conv',t:f.cvT.trim(),d:f.cvD,h:'09:00',pl:'Centro de treinamento',who:[aid],rel:false});S.reqs.push({id:uid(),kind:'conv',aid,eid,title:f.cvT.trim(),date:f.cvD,status:'pend'});S.notifs.push({id:uid(),aid,aud:'resp',text:'Comunicado do Inter sobre '+a.name.split(' ')[0]+': há uma convocação aguardando sua liberação (aba Aprovar).',seen:false});log('SACI','Emitiu convocação: '+f.cvT.trim()+' ('+a.name+')');V.form={};toast('Convocatória emitida: responsável avisado')};
+render();
+</script></body></html>
