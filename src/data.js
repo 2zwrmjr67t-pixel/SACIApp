@@ -3,8 +3,13 @@
    Se ficar vazio, o app tenta o arquivo local videos/<curso>-<n>.mp4 no mesmo repositório.
    Chave = id do curso + '-' + número da aula (começa em 1). */
 const VIDEOS={
-'k_boas-1':'https://youtu.be/VULx2RhULAY', 'k_boas-2':'', 'k_boas-3':'',
-'k_fund-1':'', 'k_jogo-1':'', 'k_trn1-1':''
+'k_boas-1':'https://youtu.be/VULx2RhULAY',  // Nossa história
+'k_boas-2':'https://youtu.be/dKTnRGNjwqg',  // O Beira-Rio
+'k_boas-3':'https://youtu.be/QhISJphJfAc',  // Os valores do clube
+'k_fund-1':'https://youtu.be/R7O6IjH7_SM',  // Domínio
+'k_fund-2':'https://youtu.be/z5bhpUaBk5g',  // Condução
+'k_fund-3':'https://youtu.be/1RXBlT-tr1E',  // Passe na parede
+'k_jogo-1':'', 'k_trn1-1':''
 };
 const TODAY='2026-11-05';
 const CATS=['Sub-9','Sub-11','Sub-13','Sub-15','Sub-17'];
@@ -84,9 +89,9 @@ coaches:[
 athletes:[
 {id:'a1',name:'Gabriel Souza',cat:'Sub-13',mod:'Campo',pos:'Meia',foot:'Direita',partner:'p1',coach:'tr1',resp:'Ana Souza',avatar:{skin:1,hair:0,hc:0},
 stats:{treinos:24,eventos:5,missoes:31},week:{goal:4,done:3},done:['q1','q2','q4','d3'],
-cards:[{id:'C1',d:'2026-05-14'},{id:'C3',d:'2026-09-03'},{id:'F1',d:'2026-06-20'},{id:'F2',d:'2026-07-18'},{id:'F3',d:'2026-09-12'},{id:'G1',d:'2026-03-04'},{id:'G2',d:'2026-04-30'},{id:'H1',d:'2026-03-20'},{id:'H2',d:'2026-03-20'},{id:'H3',d:'2026-03-20'},{id:'G3',d:'2026-10-08'},{id:'M1',d:'2026-08-02'},{id:'CV1',d:'2026-10-28'}],
+cards:[{id:'C1',d:'2026-05-14'},{id:'C3',d:'2026-09-03'},{id:'F1',d:'2026-06-20'},{id:'F2',d:'2026-07-18'},{id:'F3',d:'2026-09-12'},{id:'G1',d:'2026-03-04'},{id:'G2',d:'2026-04-30'},{id:'G3',d:'2026-10-08'},{id:'M1',d:'2026-08-02'},{id:'CV1',d:'2026-10-28'}],
 altura:[{d:'2026-03-10',cm:151,by:'Rodrigo Menezes'},{d:'2026-09-15',cm:156,by:'Rodrigo Menezes'}],mat:'sem',
-courses:{k_boas:{les:[0,1,2]}},consent:{termo:'v1.1',d:'2026-08-12',sinais:true,pendUpd:false},limit:60,
+courses:{},consent:{termo:'v1.1',d:'2026-08-12',sinais:true,pendUpd:false},limit:60,
 trilha:[{t:'Fase 1 · Primeiros passos',n:[{id:'q1',k:'quiz'},{id:'q2',k:'quiz'}]},{t:'Fase 2 · Leitura de jogo',n:[{id:'q4',k:'quiz'},{id:'d3',k:'des',card:'F3',t:'Desafio: passe com a perna menos forte'}]},{t:'Fase 3 · Jogo coletivo',n:[{id:'q5',k:'quiz'},{id:'q7',k:'quiz'},{id:'q8',k:'quiz'}]},{t:'Fase 4 · Temporada',n:[{id:'d4',k:'des',card:'F4',t:'Desafio: controle orientado'},{id:'q6',k:'quiz'}]}]},
 {id:'a2',name:'Lucas Martins',cat:'Sub-11',mod:'Futsal',pos:'Ala',foot:'Esquerda',partner:'p2',coach:'tr2',resp:'Paulo Martins',avatar:{skin:0,hair:1,hc:1},
 stats:{treinos:11,eventos:2,missoes:9},week:{goal:4,done:2},done:['q1','q2','d1'],
