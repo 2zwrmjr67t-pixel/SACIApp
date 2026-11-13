@@ -275,6 +275,19 @@ body{background:var(--g1)}
 .les small{display:block;color:var(--mut);font-size:12px}
 .lk2{color:var(--ac);font-weight:600;font-size:14px}
 @media(max-width:520px){.demo{left:auto;right:8px;top:6px;bottom:auto;width:30px;height:30px;background:rgba(255,255,255,.18)}.demop{left:auto;right:10px;top:44px;bottom:auto}.ph-top{padding-right:46px}}
+
+/* comemoração do quiz */
+.cele{position:relative;overflow:hidden;text-align:center;margin:10px 0 12px;padding:12px 8px;border-radius:14px}
+.cele b{display:block;font-size:30px;font-weight:900;letter-spacing:.02em;line-height:1.1}
+.cele span{font-size:15px;font-weight:600}
+.cele.ok{background:var(--red);color:#fff;background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.1) 0 14px,transparent 14px 28px)}
+.cele.ok b{animation:gol .7s cubic-bezier(.2,1.6,.4,1) both}
+.cele.ok span{display:block;animation:rise .3s .35s both}
+.cele.no{background:var(--g1);color:var(--g4);border:1.5px solid var(--g2)}
+.cele.no b{color:var(--g3);animation:uh .5s both}
+@keyframes gol{0%{transform:scale(.3);opacity:0}60%{transform:scale(1.25) rotate(-3deg);opacity:1}100%{transform:none}}
+@keyframes uh{0%,100%{transform:none}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.opt:disabled{opacity:.55}.opt.ok:disabled,.opt.no:disabled{opacity:1}.cele .conf{z-index:0}.cele b,.cele span{position:relative;z-index:1}
 </style></head><body><div id="app"></div><template id="vph"><div class="vph"><svg width="44" height="44" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg><b>Vídeo em breve</b><small>Adicione o link em VIDEOS (data.js) ou o arquivo em videos/</small></div></template>
 <script>/* VÍDEOS DAS AULAS
    Para cada aula, cole um link do YouTube (ex.: 'https://www.youtube.com/watch?v=XXXX').
@@ -491,7 +504,7 @@ function vTrilha(a,mode){const cur=nextNode(a);
   return `<div class="zn ${st} p${pos}"><button class="orb" ${st!=='cur'||mode==='resp'||pend?'disabled':''} data-act="node" data-id="${n.id}">${ic(done?'check':st==='fut'?'lock':n.k==='quiz'?'star':'ball',24)}</button><div class="lb"><b>${esc(lb)}</b><small>${sb}</small></div></div>`}).join('')}</div></div>`).join('')}
 ACT.node=d=>{const a=A(V.aid),n=allNodes(a).find(x=>x.id===d.id);if(n.k==='quiz'){V.modal={k:'quiz',qid:n.id,i:0,picked:null,ans:[]};render()}else{S.reqs.push({id:uid(),kind:'valida',aid:a.id,nid:n.id,card:n.card,t:n.t,status:'pend'});toast('Pedido enviado ao seu treinador')}};
 function quizM(){const m=V.modal,q=QUIZ[m.qid],qq=q.qs[m.i],ord=[0,1,2].map(k=>(k+m.i+1)%3);
- return `<h3>${esc(q.t)}</h3><div class="sub">Pergunta ${m.i+1} de ${q.qs.length}</div><p style="margin:10px 0;font-weight:600">${esc(qq.q)}</p>${ord.map(k=>{let cl='';if(m.picked!=null){if(k===0)cl='ok';else if(k===m.picked)cl='no'}return `<button class="opt ${cl}" ${m.picked!=null?'disabled':''} data-act="qans" data-k="${k}">${esc(qq.o[k])}</button>`}).join('')}${m.picked!=null?`<p class="sub" style="margin:8px 0">${m.picked===0?'Isso! Acertou.':'Quase! A resposta era: '+esc(qq.o[0])+'.'}</p><button class="btn" data-act="qnext">${m.i+1<q.qs.length?'Próxima':'Concluir missão'}</button>`:''}`}
+ return `<h3>${esc(q.t)}</h3><div class="sub">Pergunta ${m.i+1} de ${q.qs.length}</div><p style="margin:10px 0;font-weight:600">${esc(qq.q)}</p>${ord.map(k=>{let cl='';if(m.picked!=null){if(k===0)cl='ok';else if(k===m.picked)cl='no'}return `<button class="opt ${cl}" ${m.picked!=null?'disabled':''} data-act="qans" data-k="${k}">${esc(qq.o[k])}</button>`}).join('')}${m.picked!=null?`${(()=>{const pl=isPlay(A(V.aid));return m.picked===0?`<div class="cele ok">${confetti(24,'conf')}<b>${pl?'Feitoooo!':'Golaço.'}</b><span>${pl?'Isso!':'Resposta certa.'}</span></div>`:`<div class="cele no"><b>${pl?'Uhhh…':'Na trave.'}</b><span>${pl?'quase! ':''}A resposta era: ${esc(qq.o[0])}.</span></div>`})()}<button class="btn" data-act="qnext">${m.i+1<q.qs.length?'Próxima':'Concluir missão'}</button>`:''}`}
 ACT.qans=d=>{const m=V.modal;if(m.picked!=null)return;m.picked=+d.k;m.ans.push(+d.k===0);render()};
 ACT.qnext=()=>{const m=V.modal,q=QUIZ[m.qid],a=A(V.aid);if(m.i+1<q.qs.length){m.i++;m.picked=null;render();return}
  if(!a.done.includes(m.qid)){a.done.push(m.qid);a.stats.missoes++;a.week.done=Math.min(a.week.goal,a.week.done+1)}
